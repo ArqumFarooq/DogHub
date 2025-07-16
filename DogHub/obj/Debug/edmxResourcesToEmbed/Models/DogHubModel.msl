@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DogHubModelStoreContainer" CdmEntityContainer="DogHubEntities">
+    <EntitySetMapping Name="AuditLogs">
+      <EntityTypeMapping TypeName="DogHubModel.AuditLog">
+        <MappingFragment StoreEntitySet="AuditLog">
+          <ScalarProperty Name="PK_AuditLogId" ColumnName="PK_AuditLogId" />
+          <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+          <ScalarProperty Name="AffectedTable" ColumnName="AffectedTable" />
+          <ScalarProperty Name="AuditDetails" ColumnName="AuditDetails" />
+          <ScalarProperty Name="SysCreatedID" ColumnName="SysCreatedID" />
+          <ScalarProperty Name="SysCreatedDate" ColumnName="SysCreatedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DogBreeds">
+      <EntityTypeMapping TypeName="DogHubModel.DogBreed">
+        <MappingFragment StoreEntitySet="DogBreeds">
+          <ScalarProperty Name="PK_DogBreedId" ColumnName="PK_DogBreedId" />
+          <ScalarProperty Name="DogName" ColumnName="DogName" />
+          <ScalarProperty Name="ParentBreedId" ColumnName="ParentBreedId" />
+          <ScalarProperty Name="Origin" ColumnName="Origin" />
+          <ScalarProperty Name="LifeSpan" ColumnName="LifeSpan" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
+          <ScalarProperty Name="SysCreatedDate" ColumnName="SysCreatedDate" />
+          <ScalarProperty Name="SysCreatedID" ColumnName="SysCreatedID" />
+          <ScalarProperty Name="SysModifiedDate" ColumnName="SysModifiedDate" />
+          <ScalarProperty Name="SysModifiedID" ColumnName="SysModifiedID" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="DogHubModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="PK_UserId" ColumnName="PK_UserId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+          <ScalarProperty Name="AuthProvider" ColumnName="AuthProvider" />
+          <ScalarProperty Name="AuthId" ColumnName="AuthId" />
+          <ScalarProperty Name="SysCreatedDate" ColumnName="SysCreatedDate" />
+          <ScalarProperty Name="SysModifiedDate" ColumnName="SysModifiedDate" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

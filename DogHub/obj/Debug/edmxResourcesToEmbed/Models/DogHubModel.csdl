@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DogHubModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="AuditLog">
+    <Key>
+      <PropertyRef Name="PK_AuditLogId" />
+    </Key>
+    <Property Name="PK_AuditLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ActionType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="AffectedTable" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="AuditDetails" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SysCreatedID" Type="Int32" />
+    <Property Name="SysCreatedDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="DogBreed">
+    <Key>
+      <PropertyRef Name="PK_DogBreedId" />
+    </Key>
+    <Property Name="PK_DogBreedId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DogName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ParentBreedId" Type="Int32" />
+    <Property Name="Origin" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="LifeSpan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ImageUrl" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="SysCreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="SysCreatedID" Type="Int32" />
+    <Property Name="SysModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="SysModifiedID" Type="Int32" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="SubBreeds" Relationship="Self.FK__DogBreeds__Paren__267ABA7A" FromRole="DogBreeds" ToRole="DogBreeds1" />
+    <NavigationProperty Name="ParentBreed" Relationship="Self.FK__DogBreeds__Paren__267ABA7A" FromRole="DogBreeds1" ToRole="DogBreeds" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="PK_UserId" />
+    </Key>
+    <Property Name="PK_UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="IsAdmin" Type="Boolean" />
+    <Property Name="AuthProvider" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="AuthId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="SysCreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="SysModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" />
+  </EntityType>
+  <Association Name="FK__DogBreeds__Paren__267ABA7A">
+    <End Role="DogBreeds" Type="Self.DogBreed" Multiplicity="0..1" />
+    <End Role="DogBreeds1" Type="Self.DogBreed" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DogBreeds">
+        <PropertyRef Name="PK_DogBreedId" />
+      </Principal>
+      <Dependent Role="DogBreeds1">
+        <PropertyRef Name="ParentBreedId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DogHubEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AuditLogs" EntityType="Self.AuditLog" />
+    <EntitySet Name="DogBreeds" EntityType="Self.DogBreed" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK__DogBreeds__Paren__267ABA7A" Association="Self.FK__DogBreeds__Paren__267ABA7A">
+      <End Role="DogBreeds" EntitySet="DogBreeds" />
+      <End Role="DogBreeds1" EntitySet="DogBreeds" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
