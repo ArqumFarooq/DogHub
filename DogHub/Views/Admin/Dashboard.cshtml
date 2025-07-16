@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Welcome to Admin Dashboard</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card bg-primary text-white p-4 rounded shadow">
+            <h3>Total Users</h3>
+            <p>@ViewBag.TotalUsers</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-success text-white p-4 rounded shadow">
+            <h3>Total Dog Breeds</h3>
+            <p>@ViewBag.TotalDogBreeds</p>
+        </div>
+    </div>
+</div>

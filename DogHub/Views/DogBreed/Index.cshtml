@@ -1,0 +1,114 @@
+﻿@model IEnumerable<DogHub.Models.DogBreed>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DogName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Origin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LifeSpan)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImageUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ParentBreed.DogName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DogName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Origin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LifeSpan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                {
+                    <img src="@item.ImageUrl" alt="Dog Image" width="80" height="80" style="object-fit: cover;" />
+                }
+                else
+                {
+                    <span class="text-muted">No Image</span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParentBreed.DogName)
+            </td>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PK_DogBreedId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.PK_DogBreedId }) |
+                    @*@Html.ActionLink("Delete", "Delete", new { id = item.PK_DogBreedId })*@
+                    <button class="btn btn-danger delete-breed" data-id="@item.PK_DogBreedId">Delete</button>
+                </td>
+            }
+        </tr>
+    }
+
+</table>
+
+@section Scripts {
+    <script>
+        $(document).on("click", ".delete-breed", function () {
+            var breedId = $(this).data("id");
+
+            $.ajax({
+                url: '@Url.Action("DeleteConfirmed", "DogBreed")',
+                type: 'POST',
+                data: { id: breedId },
+                success: function (response) {
+                    if (response.hasSubBreeds) {
+                        if (confirm(response.message)) {
+                            // Proceed with cascade delete
+                            $.ajax({
+                                url: '@Url.Action("CascadeDelete", "DogBreed")',
+                                type: 'POST',
+                                data: { id: response.breedId },
+                                success: function (res) {
+                                    alert("Deleted successfully.");
+                                    location.reload();
+                                }
+                            });
+                        }
+                    } else if (response.success) {
+                        alert("Deleted successfully.");
+                        location.reload();
+                    } else {
+                        alert("An error occurred while deleting.");
+                    }
+                },
+                error: function () {
+                    alert("Server error while deleting the record.");
+                }
+            });
+        });
+    </script>
+}

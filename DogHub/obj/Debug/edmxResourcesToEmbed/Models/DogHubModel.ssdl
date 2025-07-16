@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DogHubModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="AuditLog">
+    <Key>
+      <PropertyRef Name="PK_AuditLogId" />
+    </Key>
+    <Property Name="PK_AuditLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ActionType" Type="nvarchar" MaxLength="50" />
+    <Property Name="AffectedTable" Type="nvarchar" MaxLength="100" />
+    <Property Name="AuditDetails" Type="nvarchar(max)" />
+    <Property Name="SysCreatedID" Type="int" />
+    <Property Name="SysCreatedDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="DogBreeds">
+    <Key>
+      <PropertyRef Name="PK_DogBreedId" />
+    </Key>
+    <Property Name="PK_DogBreedId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DogName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="ParentBreedId" Type="int" />
+    <Property Name="Origin" Type="nvarchar" MaxLength="150" />
+    <Property Name="LifeSpan" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="ImageUrl" Type="nvarchar" MaxLength="1000" />
+    <Property Name="SysCreatedDate" Type="datetime" />
+    <Property Name="SysCreatedID" Type="int" />
+    <Property Name="SysModifiedDate" Type="datetime" />
+    <Property Name="SysModifiedID" Type="int" />
+    <Property Name="IsDeleted" Type="bit" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="PK_UserId" />
+    </Key>
+    <Property Name="PK_UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="150" />
+    <Property Name="IsAdmin" Type="bit" />
+    <Property Name="AuthProvider" Type="nvarchar" MaxLength="50" />
+    <Property Name="AuthId" Type="nvarchar" MaxLength="150" />
+    <Property Name="SysCreatedDate" Type="datetime" />
+    <Property Name="SysModifiedDate" Type="datetime" />
+    <Property Name="IsActive" Type="bit" />
+  </EntityType>
+  <Association Name="FK__DogBreeds__Paren__267ABA7A">
+    <End Role="DogBreeds" Type="Self.DogBreeds" Multiplicity="0..1" />
+    <End Role="DogBreeds1" Type="Self.DogBreeds" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DogBreeds">
+        <PropertyRef Name="PK_DogBreedId" />
+      </Principal>
+      <Dependent Role="DogBreeds1">
+        <PropertyRef Name="ParentBreedId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DogHubModelStoreContainer">
+    <EntitySet Name="AuditLog" EntityType="Self.AuditLog" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DogBreeds" EntityType="Self.DogBreeds" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__DogBreeds__Paren__267ABA7A" Association="Self.FK__DogBreeds__Paren__267ABA7A">
+      <End Role="DogBreeds" EntitySet="DogBreeds" />
+      <End Role="DogBreeds1" EntitySet="DogBreeds" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
