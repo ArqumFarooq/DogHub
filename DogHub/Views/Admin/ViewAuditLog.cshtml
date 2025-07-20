@@ -1,0 +1,212 @@
+﻿@using DogHub.HelpingClasses
+@using DogHub.Models
+
+@{
+    ViewBag.Title = "AuditLogs Record";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<img id="loadImg" src='../Content/assets/images/loading.gif' width='100' style="position:fixed; margin-top:20%; margin-left:35%; z-index:111; display:none" />
+
+@*Link with search datatable*@
+<div class="row m-5" style=" border:2px solid #424ef4; border-radius:10px; color:white;">
+    <div class="col-xs-12" style="background-color:#0005A7; border-radius:10px;">
+        <div class="row">
+            <div class="col-md-2 col-lg-4" style="padding: 20px;padding-top:20px;">
+                <div class="form-group">
+                    <label><strong>Action Type:</strong></label>
+                    <input type="text" placeholder="Search Action Type Here" class="form-control" id="searchActionType" style="background-color:white">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div style="padding: 20px;">
+                <div class="form-group">
+                    <button onclick="SearchAuditLog()" class="btn btn-primary pull-right">Search</button><br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<div class="clearfix">
+    <h3 class="text-center">
+        <u>AuditLogs List</u>
+    </h3>
+</div>
+<br />
+
+<div style="min-height:700px">
+    <div style="font-weight:bold; color:@ViewBag.Color ; margin-left:10px;" id="alertMsg">
+        @ViewBag.Message
+    </div>
+    <div class="datatable-scroll table-bordered p-10">
+        <table class="table no-footer table-responsive table-striped" id="auditLogTable">
+            <thead class="bg-blue-400">
+                <tr>
+                    <th class="text-bold">
+                        Action Type
+                    </th>
+                    <th class="text-bold">
+                        Affected Table Name
+                    </th>
+                    <th class="text-bold">
+                        Description
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+
+    $('#auditLogTable').DataTable({
+    "ajax": {
+        "url": '@Url.Action("GetAuditLogList", "Admin")',
+        "type": "POST",
+        "datatype": "json",
+    },
+    'columns': [
+        { "data": "ActionType", "name": "ActionType" },
+        { "data": "AffectedTable", "name": "AffectedTable" },
+        { "data": "AuditDetails", "name": "AuditDetails" }
+    ],
+    'columnDefs': [
+        {
+            "targets": 0,
+            'className': 'col-lg-2',
+            "orderable": true,
+            "render": function (data, type, full, meta) {
+                var badgeClass = '';
+
+                switch ((full.ActionType || '').toLowerCase()) {
+                    case 'create':
+                        badgeClass = 'badge bg-success'; 
+                        break;
+                    case 'update':
+                        badgeClass = 'badge bg-violet text-dark'; 
+                        break;
+                    case 'delete':
+                        badgeClass = 'badge  bg-pink-400'; 
+                        break;
+                    default:
+                        badgeClass = 'badge bg-secondary'; 
+                }
+
+                return `<span class="${badgeClass}">${full.ActionType}</span>`;
+            }
+        },
+        {
+            "targets": 1,
+            'className': 'col-lg-3',
+            "orderable": false,
+            "render": function (data, type, full, meta) {
+                return full.AffectedTable;
+            }
+        },
+        {
+            "targets": 2,
+            'className': 'col-lg-7',
+            "orderable": false,
+            "render": function (data, type, full, meta) {
+                return full.AuditDetails;
+            }
+        }
+    ],
+    "serverSide": true,
+    "processing": true,
+    "language": {
+        "processing": "<img src='../Content/assets/images/loading.gif' width='100'/>",
+        "search": "<span>Search :</span> _INPUT_",
+        "searchPlaceholder": "Filter Values",
+        "lengthMenu": "<span>Show :</span> _MENU_",
+        "paginate": {
+            'first': 'First',
+            'last': 'Last',
+            'next': '&rarr;',
+            'previous': '&larr;'
+        }
+    }
+});
+
+
+    function SearchAuditLog()
+    {
+        $('#auditLogTable').DataTable().clear();
+        $('#auditLogTable').DataTable().destroy();
+
+        var ActionType = document.getElementById("searchActionType").value;
+
+        $('#auditLogTable').DataTable(
+        {
+            "ajax":
+            {
+                "url": '@Url.Action("GetAuditLogList", "Admin")',
+                "type": "POST",
+                "datatype": "json",
+                "data": { ActionType: ActionType}
+                },
+            'columns':
+                    [
+                        { "data": "ActionType", "name": "ActionType" },
+                        { "data": "AffectedTable", "name": "AffectedTable" },
+                        { "data": "AuditDetails", "name": "AuditDetails" }
+                    ],
+            'columnDefs': [
+                    {
+                        "targets": 0,
+                        'className': 'col-lg-2',
+                        "orderable": true,
+                        "render": function (data, type, full, meta) {
+                            var badgeClass = '';
+
+                            switch ((full.ActionType || '').toLowerCase()) {
+                                case 'create':
+                                    badgeClass = 'badge bg-success'; 
+                                    break;
+                                case 'update':
+                                    badgeClass = 'badge bg-violet text-dark'; 
+                                    break;
+                                case 'delete':
+                                    badgeClass = 'badge bg-pink-400'; 
+                                    break;
+                                default:
+                                    badgeClass = 'badge bg-secondary'; 
+                            }
+
+                            return `<span class="${badgeClass}">${full.ActionType}</span>`;
+                        }
+                    },
+                    {
+                        "targets": 1,
+                        'className': 'col-lg-3',
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            return full.AffectedTable;
+                        }
+                    },
+                    {
+                        "targets": 2,
+                        'className': 'col-lg-7',
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            return full.AuditDetails;
+                        }
+                    }
+                ],
+            "serverSide": "true",
+            "processing": "true",
+            "language":
+            {
+                "processing": "<img src='../Content/assets/images/loading.gif' width='100'/>",
+                "search": "<span>Search :</span> _INPUT_",
+                "searchPlaceholder": "Filter Values",
+                "lengthMenu": "<span>Show :</span> _MENU_",
+                "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+            },
+        });
+    }
+
+</script>

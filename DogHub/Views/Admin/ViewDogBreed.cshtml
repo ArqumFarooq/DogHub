@@ -1,0 +1,643 @@
+﻿@using DogHub.HelpingClasses
+@using DogHub.Models
+
+@{
+    ViewBag.Title = "Dog Breed Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<img id="loadImg" src='../Content/assets/images/loading.gif' width='100' style="position:fixed; margin-top:20%; margin-left:35%; z-index:111; display:none" />
+
+<div class="modal" id="deleteModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Do You Want to Delete?</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer text-center">
+                <a class="btn btn-danger" id="deleteId">Yes</a>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-center text-bold">Update Dog Breed</h5>
+                <div class="text-left" id="alertMsgUpdate">
+                </div>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form action="@Url.Action("PostUpdateDogBreed", "Admin")" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="PK_DogBreedId" id="updateId" />
+
+                    <div class="form-group">
+                        <label class="text-bold">Breed Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="updateBreedName" name="DogName" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-bold">Parent Breed</label>
+                        <select name="ParentBreedId" id="updateParentBreedId" class="form-control">
+                            <option value="">-- Select Parent Breed (optional) --</option>
+                            @if (ViewBag.ParentBreeds != null)
+                            {
+                                foreach (var item in ViewBag.ParentBreeds)
+                                {
+                                    <option value="@item.PK_DogBreedId">@item.DogName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-bold">Origin Country <span class="text-danger">*</span></label>
+                        <select name="Origin" id="updateOrigin" class="form-control" required>
+                            <option value="">-- Select Country --</option>
+                            @if (ViewBag.Countries != null)
+                            {
+                                foreach (var country in ViewBag.Countries)
+                                {
+                                    <option value="@country">@country</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-bold">Life Span (in years) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.1" class="form-control" name="LifeSpan" id="updateLifeSpan" min="0.1" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-bold">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="Description" id="updateDescription" required></textarea>
+                        <small id="updateDescMessage" class="text-danger d-none mt-1"></small>
+                        <button type="button" id="generateFromAIUpdate" class="btn btn-outline-info btn-sm mt-2">Generate Description (AI)</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-bold">Upload New Image (optional) / Fetch From AI</label>
+                        <input type="file" class="form-control" id="updateDogImageInput" name="ImageFile" accept="image/*" />
+
+                        <button type="button" id="getImageUpdate" class="btn btn-outline-secondary btn-sm mt-2">Get Dog Image</button>
+
+                        <div id="updatePreviewContainer" style="margin-top: 10px; display: none;">
+                            <img id="updateImagePreview" src="#" alt="Image Preview" style="max-width: 200px; border: 1px solid #ddd; padding: 5px; border-radius: 5px;" />
+                            <button type="button" id="updateRemoveImageBtn" class="btn btn-sm btn-danger mt-2">Remove</button>
+                        </div>
+
+                        <div id="updateDogImageContainer" style="margin-top: 10px; display: none;">
+                            <img id="updateDogImage" src="#" alt="Dog CEO Image" style="max-width: 200px; border: 1px solid #ddd; padding: 5px; border-radius: 5px;" />
+                        </div>
+
+                        <small id="updateImageMessage" class="text-danger d-none mt-1"></small>
+                    </div>
+
+                    <input type="hidden" name="DogImageUrl" id="DogImageUrl" />
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Link with search datatable*@
+<div class="row m-5" style="border:2px solid #424ef4; border-radius:10px; color:white;">
+    <div class="col-xs-12" style="background-color:#0005A7; border-radius:10px;">
+        <div class="row">
+
+            <div class="col-md-4" style="padding: 20px;">
+                <div class="form-group">
+                    <label><strong>Dog Name:</strong></label>
+                    <input type="text" placeholder="Search Dog Name Here" class="form-control" id="searchDogName" style="background-color:white">
+                </div>
+            </div>
+
+            <div class="col-md-4" style="padding: 20px;">
+                <div class="form-group">
+                    <label><strong>Origin:</strong></label>
+                    <input type="text" placeholder="Search Origin Here" class="form-control" id="searchOrigin" style="background-color:white">
+                </div>
+            </div>
+
+            <div class="col-md-4" style="padding: 20px;">
+                <div class="form-group">
+                    <label><strong>Life Span:</strong></label>
+                    <input type="text" placeholder="Search Life Span Here" class="form-control" id="searchLifeSpan" style="background-color:white">
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div style="padding: 20px;">
+                <div class="form-group">
+                    <button onclick="SearchDogBreed()" class="btn btn-primary pull-right">Search</button><br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br />
+<div class="clearfix">
+    <h3 class="text-center">
+        <u>DogBreeds List</u>
+    </h3>
+</div>
+<br />
+
+<div style="min-height:700px">
+    <div style="font-weight:bold; color:@ViewBag.Color ; margin-left:10px;" id="alertMsg">
+        @ViewBag.Message
+    </div>
+    <div class="datatable-scroll table-bordered p-10">
+        <table class="table no-footer table-responsive table-striped" id="dogBreedTable">
+            <thead class="bg-blue-400">
+                <tr>
+                    <th class="text-bold">
+                        Dog Name
+                    </th>
+                    <th class="text-bold">
+                        ParentBreedId
+                    </th>
+                    <th class="text-bold">
+                        Origin
+                    </th>
+                    <th class="text-bold">
+                        Life Span
+                    </th>
+                    <th class="text-bold">
+                        Description
+                    </th>
+                    <th class="text-bold">
+                        Image
+                    </th>
+                    <th class="text-bold text-center">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+
+   $('#dogBreedTable').DataTable({
+    "ajax": {
+        "url": '@Url.Action("GetDogBreedList", "Admin")',
+        "type": "POST",
+        "datatype": "json"
+    },
+    'columns': [
+        { "data": "DogName", "name": "DogName" },
+        { "data": "ParentBreedId", "name": "ParentBreedId" },
+        { "data": "Origin", "name": "Origin" },
+        { "data": "LifeSpan", "name": "LifeSpan" },
+        { "data": "Description", "name": "Description" },
+        { "data": "ImagePath", "name": "ImagePath" },
+        { "data": null }
+    ],
+    'columnDefs': [
+        {
+            "targets": 0,
+            "orderable": true,
+            "className": 'col-lg-2',
+            "render": function (data, type, full, meta) {
+                return full.DogName;
+            }
+        },
+        {
+            "targets": 1,
+            "orderable": true,
+            "className": 'col-lg-1',
+            "render": function (data, type, full, meta) {
+                return full.ParentBreedId ?? "-";
+            }
+        },
+        {
+            "targets": 2,
+            "orderable": true,
+            "className": 'col-lg-2',
+            "render": function (data, type, full, meta) {
+                return full.Origin ?? "-";
+            }
+        },
+        {
+            "targets": 3,
+            "orderable": true,
+            "className": 'col-lg-2',
+            "render": function (data, type, full, meta) {
+                return full.LifeSpan ?? "-";
+            }
+        },
+        {
+            "targets": 4,
+            "orderable": true,
+            "className": 'col-lg-3',
+            "render": function (data, type, full, meta) {
+                return full.Description?.substring(0, 100) + '...';
+            }
+        },
+        {
+            "targets": 5,
+            "orderable": false,
+            "className": 'col-lg-1 text-center',
+            "render": function (data, type, full, meta) {
+                if (full.ImageUrl && (full.ImageUrl.startsWith("data:image") || full.ImageUrl.startsWith("http") || full.ImageUrl.startsWith("/Uploads"))) {
+                    return `<img src="${full.ImageUrl}" alt="dog" width="50" height="50" style="object-fit:cover;border-radius:5px;" />`;
+                }
+                return 'No Image';
+            }
+        },
+        {
+            "targets": 6,
+            "orderable": false,
+            "className": 'col-lg-1 text-center',
+            "render": function (data, type, full, meta) {
+                if (full.SubBreedCount == 0) {
+                    return `
+                    <ul class="icons-list text-center">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-menu9"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a class="text-info" onclick="UpdateDogBreed(${full.PK_DogBreedId})">
+                                        <i class="icon-pencil"></i> Update
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="text-danger" onclick="deleteFunction(${full.PK_DogBreedId})" data-toggle="modal" data-target="#deleteModal">
+                                        <i class="glyphicon glyphicon-floppy-remove"></i> Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>`;
+                }
+                else {
+                    return `
+                    <ul class="icons-list text-center">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-menu9"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a class="text-info" onclick="UpdateDogBreed(${full.PK_DogBreedId})">
+                                        <i class="icon-pencil"></i> Update
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="text-danger" title="Not Allowed" data-popup="tooltip" data-original-title="This breed has sub-breeds. Delete them first to proceed.">
+                                        <i class="glyphicon glyphicon-floppy-remove"></i> Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>`;
+                }
+            }
+        }
+    ],
+    "serverSide": true,
+    "processing": true,
+    "language": {
+        "processing": "<img src='../Content/assets/images/loading.gif' width='100'/>",
+        "search": "<span>Search :</span> _INPUT_",
+        "searchPlaceholder": "Filter Values",
+        "lengthMenu": "<span>Show :</span> _MENU_",
+        "paginate": {
+            'first': 'First',
+            'last': 'Last',
+            'next': '&rarr;',
+            'previous': '&larr;'
+        }
+    }
+});
+
+    function SearchDogBreed()
+    {
+        $('#dogBreedTable').DataTable().clear();
+        $('#dogBreedTable').DataTable().destroy();
+
+        var DogName = document.getElementById("searchDogName").value;
+        var Origin = document.getElementById("searchOrigin").value;
+        var LifeSpan = document.getElementById("searchLifeSpan").value;
+
+        $('#dogBreedTable').DataTable(
+        {
+            "ajax":
+            {
+                "url": '@Url.Action("GetDogBreedList", "Admin")',
+                "type": "POST",
+                "datatype": "json",
+                "data": { DogName: DogName, Origin: Origin, LifeSpan: LifeSpan}
+                },
+                'columns': [
+                    { "data": "DogName", "name": "DogName" },
+                    { "data": "ParentBreedId", "name": "ParentBreedId" },
+                    { "data": "Origin", "name": "Origin" },
+                    { "data": "LifeSpan", "name": "LifeSpan" },
+                    { "data": "Description", "name": "Description" },
+                    { "data": "ImagePath", "name": "ImagePath" },
+                    { "data": null }
+                ],
+                'columnDefs': [
+                    {
+                        "targets": 0,
+                        "orderable": true,
+                        "className": 'col-lg-2',
+                        "render": function (data, type, full, meta) {
+                            return full.DogName;
+                        }
+                    },
+                    {
+                        "targets": 1,
+                        "orderable": true,
+                        "className": 'col-lg-1',
+                        "render": function (data, type, full, meta) {
+                            return full.ParentBreedId ?? "-";
+                        }
+                    },
+                    {
+                        "targets": 2,
+                        "orderable": true,
+                        "className": 'col-lg-2',
+                        "render": function (data, type, full, meta) {
+                            return full.Origin ?? "-";
+                        }
+                    },
+                    {
+                        "targets": 3,
+                        "orderable": true,
+                        "className": 'col-lg-2',
+                        "render": function (data, type, full, meta) {
+                            return full.LifeSpan ?? "-";
+                        }
+                    },
+                    {
+                        "targets": 4,
+                        "orderable": true,
+                        "className": 'col-lg-3',
+                        "render": function (data, type, full, meta) {
+                            return full.Description ?.substring(0, 100) + '...';
+                        }
+                    },
+                    {
+                        "targets": 5,
+                        "orderable": false,
+                        "className": 'col-lg-1 text-center',
+                        "render": function (data, type, full, meta) {
+                            if (full.ImageUrl && (full.ImageUrl.startsWith("data:image") || full.ImageUrl.startsWith("http") || full.ImageUrl.startsWith("/Uploads"))) {
+                                return `<img src="${full.ImageUrl}" alt="dog" width="50" height="50" style="object-fit:cover;border-radius:5px;" />`;
+                            }
+                            return 'No Image';
+                        }
+                    },
+                    {
+                        "targets": 6,
+                        "orderable": false,
+                        "className": 'col-lg-1 text-center',
+                        "render": function (data, type, full, meta) {
+                            if (full.SubBreedCount == 0) {
+                                return `
+                    <ul class="icons-list text-center">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-menu9"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a class="text-info" onclick="UpdateDogBreed(${full.PK_DogBreedId})">
+                                        <i class="icon-pencil"></i> Update
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="text-danger" onclick="deleteFunction(${full.PK_DogBreedId})" data-toggle="modal" data-target="#deleteModal">
+                                        <i class="glyphicon glyphicon-floppy-remove"></i> Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>`;
+                            }
+                            else {
+                                return `
+                    <ul class="icons-list text-center">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-menu9"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a class="text-info" onclick="UpdateDogBreed(${full.PK_DogBreedId})">
+                                        <i class="icon-pencil"></i> Update
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="text-danger" title="Not Allowed" data-popup="tooltip" data-original-title="This breed has sub-breeds. Delete them first to proceed.">
+                                        <i class="glyphicon glyphicon-floppy-remove"></i> Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>`;
+                            }
+                        }
+                    }
+                ],
+            "serverSide": "true",
+            "processing": "true",
+            "language":
+            {
+                "processing": "<img src='../Content/assets/images/loading.gif' width='100'/>",
+                "search": "<span>Search :</span> _INPUT_",
+                "searchPlaceholder": "Filter Values",
+                "lengthMenu": "<span>Show :</span> _MENU_",
+                "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+            },
+        });
+    }
+
+    function UpdateDogBreed(id) {
+        $('#loadImg').show();
+
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/GetDogBreedById",
+            dataType: "json",
+            data: { id: id },
+            success: function (response) {
+                $('#updateId').val(response.PK_DogBreedId);
+                $('#updateBreedName').val(response.DogName);
+                $('#updateParentBreedId').val(response.ParentBreedId);
+                $('#updateOrigin').val(response.Origin);
+                $('#updateLifeSpan').val(response.LifeSpan);
+                $('#updateDescription').val(response.Description);
+
+                if (response.ImageUrl) {
+                    $('#updateImagePreview').attr('src', response.ImageUrl);
+                    $('#updatePreviewContainer').show();
+                } else {
+                    $('#updatePreviewContainer').hide();
+                }
+
+                $('#updateModal').modal('show');
+                $('#loadImg').hide();
+            },
+            error: function () {
+                alert("AJAX failed while fetching dog breed data.");
+                $('#loadImg').hide();
+            }
+        });
+    }
+
+    function deleteFunction(id)
+    {
+        var a = document.getElementById('deleteId');
+        a.href = "../Admin/DeleteDogBreed?id=" + id + "";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const input = document.getElementById("updateDogImageInput");
+        const previewContainer = document.getElementById("updatePreviewContainer");
+        const preview = document.getElementById("updateImagePreview");
+        const removeBtn = document.getElementById("updateRemoveImageBtn");
+
+        input.addEventListener("change", function () {
+            const file = this.files[0];
+            const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+            if (!validTypes.includes(file?.type)) {
+                alert("Only image files (jpg, png, gif, webp) are allowed.");
+                this.value = "";
+                previewContainer.style.display = "none";
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert("File size should not exceed 2MB.");
+                this.value = "";
+                previewContainer.style.display = "none";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                previewContainer.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        });
+
+        removeBtn.addEventListener("click", function () {
+            input.value = "";
+            preview.src = "#";
+            previewContainer.style.display = "none";
+        });
+    });
+
+    $('#generateFromAIUpdate').click(function () {
+        $('#loadImg').show();
+
+        var dogName = $('#updateDogName').val().trim();
+        var parentText = $('#updateParentBreedId option:selected').text().trim();
+        var parentVal = $('#updateParentBreedId').val();
+        var parentBreed = (parentVal === "0" || parentText === "-- Select Parent Breed (optional)") ? null : parentText;
+        var origin = $('#updateOrigin').val().trim();
+        var lifeSpan = $('#updateLifeSpan').val().trim();
+
+        var missing = [];
+        if (!dogName) missing.push("Dog Name");
+        if (!origin) missing.push("Origin");
+        if (!lifeSpan) missing.push("Life Span");
+
+        if (missing.length > 0) {
+            $('#alertMsgUpdate').html("Please fill: " + missing.join(", ")).css("color", "red").fadeIn();
+            setTimeout(() => $('#alertMsgUpdate').fadeOut(), 4000);
+            $('#loadImg').hide();
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '../Admin/GenerateBreedDescription',
+            dataType: "json",
+            data: {
+                DogName: dogName,
+                ParentBreed: parentBreed,
+                Origin: origin,
+                LifeSpan: lifeSpan
+            },
+            success: function (response) {
+                $('#updateDescription').val(response.description);
+                $('#loadImg').hide();
+            },
+            error: function () {
+                $('#loadImg').hide();
+                alert('Failed to generate description.');
+            }
+        });
+    });
+
+    $('#getImageUpdate').click(function () {
+        $('#loadImg').show();
+        $('#updatePreviewContainer').show();
+
+        var breed = $('#updateDogName').val().toLowerCase().trim();
+        if (!breed) {
+            $('#updateImageMessage').text("Please enter a breed name.").show();
+            $('#updateImagePreview').hide();
+            $('#loadImg').hide();
+            return;
+        }
+
+        $('#updateImageMessage').hide();
+        $('#updateImagePreview').hide();
+
+        const apiUrl = `https://dog.ceo/api/breed/${breed}/images/random`;
+
+        $.ajax({
+            type: "GET",
+            url: apiUrl,
+            success: function (response) {
+                if (response.status === "success") {
+                    $('#updateImagePreview').attr('src', response.message).show();
+                    $('#DogImageUrl').val(response.message);
+                } else {
+                    $('#updateImageMessage').text("No image found for this dog breed.").show();
+                    $('#updatePreviewContainer').hide();
+                    $('#DogImageUrl').val('');
+                }
+                $('#loadImg').hide();
+            },
+            error: function () {
+                $('#updateImageMessage').text("No image found for this dog breed.").show();
+                $('#updatePreviewContainer').hide();
+                $('#DogImageUrl').val('');
+                $('#loadImg').hide();
+            }
+        });
+    });
+
+</script>

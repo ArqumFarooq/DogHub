@@ -46,5 +46,55 @@ namespace DogHub.HelpingClasses
 
             return count == 0;
         }
+        public bool ISDogBreedExist(string dogbreed, int id = -1)
+        {
+            int count = 0;
+
+            if (string.IsNullOrWhiteSpace(dogbreed))
+            {
+                return false;
+            }
+
+            dogbreed = dogbreed.Trim();
+
+            if (id != -1)
+            {
+                count = new DogBreedBL().GetAllDogBreeds(db)
+                    .Count(x => x.DogName.ToLower() == dogbreed.ToLower() && x.PK_DogBreedId != id && x.IsDeleted == false);
+            }
+            else
+            {
+                count = new DogBreedBL().GetAllDogBreeds(db)
+                    .Count(x => x.DogName.ToLower() == dogbreed.ToLower() && x.IsDeleted == false);
+            }
+
+            return count == 0;
+        }
+
+        public bool ISDogNameANDParentSame(string dogbreed, int? Parentid = -1)
+        {
+            DogBreed _parentDogBreed = null;
+
+            if (string.IsNullOrWhiteSpace(dogbreed))
+            {
+                return false;
+            }
+
+            dogbreed = dogbreed.Trim();
+
+            if (Parentid != -1)
+            {
+                _parentDogBreed = new DogBreedBL().GetDogBreedById(Parentid.Value, db);
+                if (_parentDogBreed.DogName == dogbreed) {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
     }
 }

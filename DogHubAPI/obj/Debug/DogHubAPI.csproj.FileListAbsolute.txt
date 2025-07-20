@@ -1,3 +1,5 @@
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Net.Http.Formatting.dll
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Mvc.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\App_Data\dogs.json
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\DogHubAPI.dll.config
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\DogHubAPI.dll
@@ -67,7 +69,6 @@ D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Owin.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Swashbuckle.Core.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Buffers.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Memory.dll
-D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Net.Http.Formatting.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Numerics.Vectors.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Runtime.CompilerServices.Unsafe.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Threading.Tasks.Extensions.dll
@@ -110,7 +111,6 @@ D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Http.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Http.Cors.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Http.Owin.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Http.WebHost.xml
-D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Mvc.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Razor.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.WebPages.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.WebPages.Deployment.xml

@@ -1,0 +1,55 @@
+﻿@using DogHub.BL
+@using DogHub.HelpingClasses
+@using DogHub.Models
+@{
+    DogHubEntities de = new DogHubEntities();
+
+    var identity = (System.Security.Claims.ClaimsPrincipal)System.Threading.Thread.CurrentPrincipal;
+    var id = identity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Sid).Select(c => c.Value).SingleOrDefault();
+    User loggedinUser = new UserBL().GetUserById(Convert.ToInt32(id), de);
+
+    ViewBag.Title = "Update Profile (" + loggedinUser.UserName + ")";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Main content -->
+<div style="min-height:950px;">
+    <br />
+    <!-- Simple login form -->
+    <form action="@Url.Action("PostUpdateProfile","Auth")" class="login-form" method="post">
+        <div class="col-md-2"></div>
+        <div class="panel panel-body col-lg-8">
+            <div class="notify" style="color:@ViewBag.Color; font-weight:bold;" id="alertMsg">
+                @ViewBag.Message
+            </div>
+            <div class="text-center">
+                <div class="icon-object text-blue"><i class="fa fa-user-plus text-blue"></i></div>
+                <h5 class="content-group">Update Profile <small class="display-block">Enter your credentials below</small></h5>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="hidden" name="Id" value="@loggedinUser.PK_UserId" readonly />
+            </div>
+
+            <div class="form-group">
+                <label class="text-bold">User Name@*<span class="text-danger">*</span>*@</label>
+                <input type="text" class="form-control" placeholder="Your Name" readonly="readonly" name="UserName" value="@loggedinUser.UserName ">
+            </div>
+            <div class="form-group">
+                <label class="text-bold">Email@*<span class="text-danger">*</span>*@ </label>
+                <input type="email" class="form-control" placeholder="Enter Valid Email Address Here" name="Email" value="@loggedinUser.Email">
+            </div>
+
+
+            <div class="form-group">
+                <label class="text-bold">Password@*<span class="text-danger">*</span>*@ </label>
+                <input type="password" class="form-control" name="Password" value="@StringCipher.Decrypt(loggedinUser.Password)">
+            </div>
+
+            <div class="form-group pull-right">
+                <button type="submit" class="btn bg-blue-800 ">Update<i class="icon-database-add position-right"></i></button>
+            </div>
+        </div>
+    </form>
+    <!-- /simple login form -->
+</div>
+<!-- /main content -->

@@ -1,22 +1,152 @@
 ﻿@{
-    ViewBag.Title = "Admin Dashboard";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using DogHub.BL
+@using DogHub.Models
+@{
+    DogHubEntities de = new DogHubEntities();
+
+    var identity = (System.Security.Claims.ClaimsPrincipal)System.Threading.Thread.CurrentPrincipal;
+    var id = identity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Sid).Select(c => c.Value).SingleOrDefault();
+
+    User loggedinUser = new UserBL().GetUserById(Convert.ToInt32(id), de);
 }
 
-<h2>Welcome to Admin Dashboard</h2>
-<hr />
+<style>
+    .square {
+        background: #F2F2F2;
+        width: 100%;
+        height: 100%;
+    }
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card bg-primary text-white p-4 rounded shadow">
-            <h3>Total Users</h3>
-            <p>@ViewBag.TotalUsers</p>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card bg-success text-white p-4 rounded shadow">
-            <h3>Total Dog Breeds</h3>
-            <p>@ViewBag.TotalDogBreeds</p>
-        </div>
-    </div>
+    h1, h2 {
+        color: #2a2b6e;
+    }
+
+    #p {
+        color: blue;
+    }
+</style>
+
+
+<div class="notify ml-10" style="color:@ViewBag.Color; font-weight:bold;" id="alertMsg">
+    @ViewBag.Message
 </div>
+@if (loggedinUser.IsAdmin == true)
+{
+    <div style="min-height: 700px;">
+
+        <br />
+        <div class="row text-center">
+            <h1><strong><u>Welcome to Admin Dashboard</u></strong></h1>
+        </div>
+        <br />
+
+        <div class="row m-10" style="">
+            <div class="col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-3 col-xs-6">
+                <div class="square">
+                    <br /><br />
+                    <center>
+                        <p id="p"><strong>Total Users</strong></p>
+                    </center>
+                    <div style="text-align: center;">
+                        <h2> @ViewBag.UserCount </h2>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+        <div class="row m-10">
+            <div class="col-lg-offset-3 col-lg-3 col-md-offset-3 col-md-3 col-xs-6">
+                <div class="square">
+                    <br /><br />
+                    <div style="text-align: center;">
+                        <p id="p"><strong>Total Dog Breeds</strong></p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h2>@ViewBag.DogBreedCount</h2>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-xs-6">
+                <div class="square">
+                    <br /><br />
+                    <div style="text-align: center;">
+                        <p id="p"><strong>Your Dog Breed Contributions</strong></p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h2>@ViewBag.DogBreedCountByUser</h2>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+        <div class="row m-10">
+            <div class="col-lg-offset-3 col-lg-3 col-md-offset-3 col-md-3 col-xs-6">
+                <div class="square">
+                    <br /><br />
+                    <div style="text-align: center;">
+                        <p id="p"><strong>Total Audit Logs</strong></p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h2> @ViewBag.AuditLogCount </h2>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-xs-6">
+                <div class="square">
+                    <br /><br />
+                    <div style="text-align: center;">
+                        <p id="p"><strong>Your Audit Actions</strong></p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h2> @ViewBag.AuditLogCountByUser </h2>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (loggedinUser.IsAdmin == false)
+{
+    <div style="min-height: 700px;">
+
+        <br />
+        <div class="row text-center">
+            <h1><strong><u>Welcome to User Dashboard</u></strong></h1>
+        </div>
+        <br />
+
+        <div class="row m-10">
+            <div class="col-lg-offset-3 col-lg-3 col-md-offset-3 col-md-3 col-xs-6">
+                <div class="square">
+                    <br /><br />
+                    <div style="text-align: center;">
+                        <p id="p"><strong>Total Dog Breeds</strong></p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h2>@ViewBag.DogBreedCount</h2>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-xs-6">
+                <div class="square">
+                    <br /><br />
+                    <div style="text-align: center;">
+                        <p id="p"><strong>Your Dog Breed Contributions</strong></p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h2>@ViewBag.DogBreedCountByUser</h2>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

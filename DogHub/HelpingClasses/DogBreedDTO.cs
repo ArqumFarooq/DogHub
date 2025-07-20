@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -15,6 +16,7 @@ namespace DogHub.HelpingClasses
         public string LifeSpan { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
+        public int SubBreedCount { get; set; }
         public string SysCreatedDate { get; set; }
         public string SysModifiedDate { get; set; }
         public bool? IsDeleted { get; set; }

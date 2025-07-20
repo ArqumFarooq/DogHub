@@ -2,6 +2,7 @@
 using DogHub.HelpingClasses;
 using DogHub.Models;
 using System;
+using System.Diagnostics;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
