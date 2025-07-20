@@ -10,6 +10,7 @@ namespace DogHub.BL
 {
     public class DogBreedBL
     {
+        #region Dogbreed
         private readonly DogBreedDAL dal = new DogBreedDAL();
 
         public List<DogBreed> GetAllDogBreeds(DogHubEntities db)
@@ -26,6 +27,7 @@ namespace DogHub.BL
         {
             return dal.AddDogBreed(breed, db);
         }
+
         public DogBreed AddAndGetDogBreed(DogBreed dogBreed, DogHubEntities db)
         {
             return dal.AddAndReturnDogBreed(dogBreed, db);
@@ -35,6 +37,7 @@ namespace DogHub.BL
         {
             return dal.UpdateDogBreed(breed, db);
         }
+
         public bool UpdateDogBreedUsingId(int id, DogBreed updatedBreed, DogHubEntities db)
         {
             return dal.UpdateDogBreedById(id, updatedBreed, db);
@@ -44,6 +47,7 @@ namespace DogHub.BL
         {
             return dal.DeleteDogBreed(id, db);
         }
+        #endregion
 
         #region casecade deletion
         public DogBreed GetBreedById(int id, DogHubEntities db)

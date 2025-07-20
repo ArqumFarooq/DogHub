@@ -100,45 +100,76 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         const input = document.getElementById("dogImageInput");
-        const previewContainer = document.getElementById("previewContainer");
-        const preview = document.getElementById("imagePreview");
-        const removeBtn = document.getElementById("removeImageBtn");
 
         input.addEventListener("change", function () {
             const file = this.files[0];
-
-            // Validate file type
             const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-            if (!validTypes.includes(file.type)) {
-                alert("Only image files (jpg, png, gif, webp) are allowed.");
+
+            try {
+                if (!validTypes.includes(file.type)) {
+                    alert("Only image files (jpg, png, gif, webp) are allowed.");
+                    this.value = "";
+                    return;
+                }
+
+                if (file.size > 10 * 1024 * 1024) {
+                    alert("File size should not exceed 10MB.");
+                    this.value = "";
+                    return;
+                }
+
+                // No preview — file is accepted silently
+                console.log("Valid image selected:", file.name);
+
+            } catch (err) {
+                console.error("File upload error:", err);
+                alert("Something went wrong while validating the file.");
                 this.value = "";
-                previewContainer.style.display = "none";
-                return;
             }
-
-            // Validate size (2MB max)
-            if (file.size > 2 * 1024 * 1024) {
-                alert("File size should not exceed 2MB.");
-                this.value = "";
-                previewContainer.style.display = "none";
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-                previewContainer.style.display = "block";
-            };
-            reader.readAsDataURL(file);
-        });
-
-        removeBtn.addEventListener("click", function () {
-            input.value = "";
-            preview.src = "#";
-            previewContainer.style.display = "none";
         });
     });
 
+    //document.addEventListener("DOMContentLoaded", function () {
+    //    const input = document.getElementById("dogImageInput");
+    //    const previewContainer = document.getElementById("previewContainer");
+    //    const preview = document.getElementById("imagePreview");
+    //    const removeBtn = document.getElementById("removeImageBtn");
+
+    //    input.addEventListener("change", function () {
+    //        const file = this.files[0];
+    //        if (!file) return;
+
+    //        // Validate file type
+    //        const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    //        if (!validTypes.includes(file.type)) {
+    //            alert("Only image files (jpg, png, gif, webp) are allowed.");
+    //            this.value = "";
+    //            previewContainer.style.display = "none";
+    //            return;
+    //        }
+
+    //        // Validate size (2MB max)
+    //        if (file.size > 10 * 1024 * 1024) {
+    //            alert("File size should not exceed 2MB.");
+    //            this.value = "";
+    //            previewContainer.style.display = "none";
+    //            return;
+    //        }
+
+    //        const reader = new FileReader();
+    //        reader.onload = function (e) {
+    //            preview.src = e.target.result;
+    //            previewContainer.style.display = "block";
+    //        };
+    //        reader.readAsDataURL(file);
+    //    });
+
+    //    removeBtn.addEventListener("click", function () {
+    //        input.value = "";
+    //        preview.src = "#";
+    //        previewContainer.style.display = "none";
+    //    });
+    //});
 
     $('#generateFromAI').click(function () {
         $('#loadImg').show();
@@ -192,8 +223,6 @@
             }
         });
     });
-
-
     
     $('#getImage').click(function () {
 
@@ -234,6 +263,5 @@
             }
         });
     });
-
 
 </script>

@@ -9,7 +9,7 @@ namespace DogHub.BL
 {
     public class UserBL
     {
-
+        #region user
         public List<User> GetActiveUsers(DogHubEntities db)
         {
             return new UserDAL().GetActiveUsers(db);
@@ -44,6 +44,7 @@ namespace DogHub.BL
         {
             return new UserDAL().UpdateUser(user, db);
         }
+        #endregion
 
         #region Seed_AdminUser
         public bool Seed_AdminUser(DogHubEntities db)

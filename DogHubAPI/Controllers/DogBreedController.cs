@@ -12,6 +12,18 @@ namespace DogHubAPI.Controllers
         private readonly DogBreedBL _bl = new DogBreedBL();
         private readonly DogHubEntities db = new DogHubEntities();
 
+        private void LogAudit(string actionType, string affectedTable, string details, int? userId = null)
+        {
+            var auditBL = new AuditLogBL();
+            auditBL.AddAuditLog(
+                actionType: actionType,
+                affectedTable: affectedTable,
+                auditDetails: details,
+                createdById: userId,
+                de: db
+            );
+        }
+
         // GET: api/dogbreeds
         [HttpGet]
         [Route("")]
@@ -42,6 +54,7 @@ namespace DogHubAPI.Controllers
                 return BadRequest(ModelState);
 
             var addedBreed = _bl.AddAndGetDogBreed(dogBreed, db);
+            LogAudit("AddDogBreed", "DogBreeds", $"DogBreed Record Added Successfully via WebAPI: {addedBreed.DogName}", 0);
             return CreatedAtRoute("DefaultApi", new { id = addedBreed.PK_DogBreedId }, addedBreed);
         }
 
@@ -55,8 +68,10 @@ namespace DogHubAPI.Controllers
 
             var result = _bl.UpdateDogBreedUsingId(id, updatedBreed, db);
             if (!result)
+            {
                 return NotFound();
-
+            }
+            LogAudit("UpdateDogBreed", "DogBreeds", $"DogBreed Record Updated Successfully via WebAPI", 0);
             return Ok("Updated successfully.");
         }
 
@@ -67,8 +82,10 @@ namespace DogHubAPI.Controllers
         {
             var result = _bl.DeleteDogBreed(id, db);
             if (!result)
+            {
                 return NotFound();
-
+            }
+            LogAudit("DeletDogBreed", "DogBreeds", $"DogBreed Record Deleted Successfully via WebAPI", 0);
             return Ok("Deleted successfully.");
         }
     }

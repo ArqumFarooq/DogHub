@@ -22,6 +22,18 @@ namespace DogHub.Controllers
         private readonly GeneralPurpose gp = new GeneralPurpose();
         private readonly DogHubEntities de = new DogHubEntities();
 
+        private void LogAudit(string actionType, string affectedTable, string details, int? userId = null)
+        {
+            var auditBL = new AuditLogBL();
+            auditBL.AddAuditLog(
+                actionType: actionType,
+                affectedTable: affectedTable,
+                auditDetails: details,
+                createdById: userId,
+                de: de
+            );
+        }
+
         #region ValidateLoginUser
         public bool ValidateLogin()
         {
@@ -79,6 +91,7 @@ namespace DogHub.Controllers
         }
         #endregion
 
+        #region Dashboard
         public ActionResult Dashboard(string msg = "", string color = "black")
         {
             if (ValidateLogin() == false)
@@ -112,6 +125,7 @@ namespace DogHub.Controllers
                 return View();
             }
         }
+        #endregion
 
         #region Manage User 
         public ActionResult AddUser(string msg = "", string color = "black")
@@ -150,12 +164,15 @@ namespace DogHub.Controllers
                     Password = StringCipher.Encrypt(_user.Password.Trim()),
                     IsAdmin = false,
                     IsActive = true,
+                    AuthId = null,
+                    AuthProvider = null,
                     SysCreatedDate = DateTime.Now
                 };
 
                 bool checkUser = new UserBL().AddUser(obj, de);
                 if (checkUser == true)
                 {
+                    LogAudit("AddUser", "Users", $"New user added by admin: {obj.Email}", 1);
                     return RedirectToAction("AddUser", "Admin", new { msg = "Record inserted successfully", color = "green" });
                 }
                 else
@@ -205,6 +222,7 @@ namespace DogHub.Controllers
                 bool checkUser = new UserBL().UpdateUser(u, de);
                 if (checkUser == true)
                 {
+                    LogAudit("UpdateUser", "Users", $"User Record updated successfully by admin: {u.Email}", 1);
                     return RedirectToAction("ViewUser", "Admin", new { msg = "Record updated successfully", color = "green" });
                 }
                 else
@@ -232,6 +250,7 @@ namespace DogHub.Controllers
                 bool checkUser = new UserBL().UpdateUser(u, de);
                 if (checkUser == true)
                 {
+                    LogAudit("DeleteUser", "Users", $"User Record Deleted successfully by admin: {u.Email}", 1);
                     return RedirectToAction("ViewUser", "Admin", new { msg = "Record Deleted successfully", color = "green" });
                 }
                 else
@@ -313,7 +332,6 @@ namespace DogHub.Controllers
             {
                 PK_UserId = u.PK_UserId,
                 UserName = u.UserName,
-                //Password = StringCipher.Decrypt(u.Password),
                 Email = u.Email
             };
 
@@ -324,16 +342,15 @@ namespace DogHub.Controllers
         #region Manage Dog Breed 
         public ActionResult AddDogBreed(string msg = "", string color = "black")
         {
-            if (ValidateAdminLogin() == false)
+            if (ValidateLogin() == false)
             {
                 return RedirectToAction("Login", "Auth", new { msg = "Session Expired! Please Login", color = "red" });
             }
 
             ViewBag.Message = msg;
             ViewBag.Color = color;
-            ViewBag.ParentBreeds = new DogBreedBL().GetAllDogBreeds(de); // Or filtered list
-            ViewBag.Countries = new List<string> { "Pakistan", "USA", "UK", "Germany", "Japan" }; // or fetch from DB
-
+            ViewBag.ParentBreeds = new DogBreedBL().GetAllDogBreeds(de);
+            ViewBag.Countries = gp.GetAllCountries();
             return View();
         }
 
@@ -342,7 +359,12 @@ namespace DogHub.Controllers
         {
             try
             {
-                if (ValidateAdminLogin() == false)
+                var identity = (System.Security.Claims.ClaimsPrincipal)System.Threading.Thread.CurrentPrincipal;
+                var id = identity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Sid).Select(c => c.Value).SingleOrDefault();
+
+                User loggedinUser = new UserBL().GetUserById(Convert.ToInt32(id), de);
+
+                if (ValidateLogin() == false)
                 {
                     return RedirectToAction("Login", "Auth", new { msg = "Session Expired! Please Login", color = "red" });
                 }
@@ -361,14 +383,20 @@ namespace DogHub.Controllers
 
                 if (ImageFile != null && ImageFile.ContentLength > 0)
                 {
-                    // Validate MIME type
+                    // Optional: check file size
+                    if (ImageFile.ContentLength > 10 * 1024 * 1024) // 10MB
+                    {
+                        return RedirectToAction("AddDogBreed", "Admin", new { msg = "Image size is exceeding the limits", color = "red" });
+                    }
+
+                    // validate MIME type
                     string[] permittedTypes = { "image/jpeg", "image/png", "image/jpg", "image/gif", "image/webp" };
                     if (!permittedTypes.Contains(ImageFile.ContentType.ToLower()))
                     {
                         return RedirectToAction("AddDogBreed", "Admin", new { msg = "Only image files (JPG, PNG, GIF, WEBP) are allowed.", color = "red" });
                     }
 
-                    // Optional: Validate extension (double security layer)
+                    // validating extension (double security layer)
                     string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
                     string fileExt = Path.GetExtension(ImageFile.FileName).ToLower();
 
@@ -405,12 +433,14 @@ namespace DogHub.Controllers
                     Description = _dogBreed.Description,
                     ImageUrl = _dogBreed.ImageUrl,
                     IsDeleted = false,
+                    SysCreatedID = loggedinUser.PK_UserId, // current user Id
                     SysCreatedDate = DateTime.Now
                 };
 
                 bool checkDogbreed = new DogBreedBL().AddDogBreed(obj, de);
                 if (checkDogbreed == true)
                 {
+                    LogAudit("AddDogBreed", "DogBreeds", $"DogBreed Record Added Successfully by admin: {obj.DogName}", loggedinUser.PK_UserId);
                     return RedirectToAction("AddDogBreed", "Admin", new { msg = "Record inserted successfully", color = "green" });
                 }
                 else
@@ -426,7 +456,7 @@ namespace DogHub.Controllers
 
         public ActionResult ViewDogBreed(string msg = "", string color = "black")
         {
-            if (ValidateAdminLogin() == false)
+            if (ValidateLogin() == false)
             {
                 return RedirectToAction("Login", "Auth", new { msg = "Session Expired! Please Login", color = "red" });
             }
@@ -466,6 +496,8 @@ namespace DogHub.Controllers
                 u.Origin = _dogBreed.Origin.Trim();
                 u.LifeSpan = _dogBreed.LifeSpan.Trim();
                 u.Description = _dogBreed.Description.Trim();
+                u.SysCreatedID = 1;
+                u.SysModifiedDate = DateTime.Now;
 
                 if (ImageFile != null && ImageFile.ContentLength > 0)
                 {
@@ -504,6 +536,7 @@ namespace DogHub.Controllers
                 bool checkdog = new DogBreedBL().UpdateDogBreed(u, de);
                 if (checkdog == true)
                 {
+                    LogAudit("UpdatedDogBreed", "DogBreeds", $"DogBreed Record Updated Successfully by admin: {u.DogName}", 1);
                     return RedirectToAction("ViewDogBreed", "Admin", new { msg = "Record updated successfully", color = "green" });
                 }
                 else
@@ -525,12 +558,13 @@ namespace DogHub.Controllers
                 {
                     return RedirectToAction("Login", "Auth", new { msg = "Session Expired! Please Login", color = "red" });
                 }
-                User u = new UserBL().GetUserById(id, de);
-                u.IsActive = false;
+                DogBreed u = new DogBreedBL().GetBreedById(id, de);
+                u.IsDeleted = true;
 
-                bool checkUser = new UserBL().UpdateUser(u, de);
+                bool checkUser = new DogBreedBL().DeleteDogBreed(u.PK_DogBreedId, de);
                 if (checkUser == true)
                 {
+                    LogAudit("DeletedDogBreed", "DogBreeds", $"DogBreed Record Deleted Successfully by admin: {u.DogName}", 1);
                     return RedirectToAction("ViewUser", "Admin", new { msg = "Record Deleted successfully", color = "green" });
                 }
                 else
@@ -543,7 +577,6 @@ namespace DogHub.Controllers
                 return RedirectToAction("Index", "Error");
             }
         }
-
 
         [HttpPost]
         public ActionResult GetDogBreedList(string DogName = "", string Origin = "", string LifeSpan = "")
@@ -672,19 +705,19 @@ namespace DogHub.Controllers
             //    return Json(new { description = aiDescription });
             #endregion
 
-            string description = $"The {DogName} is a remarkable breed that traces its roots back to {Origin}. ";
+            string description = $"The '{DogName}' is a remarkable breed that traces its roots back to '{Origin}'. ";
 
-            if (!string.IsNullOrWhiteSpace(ParentBreed))
+            if (!string.IsNullOrWhiteSpace(ParentBreed) && ParentBreed != "-- Select Parent Breed (optional)--")
             {
-                description += $"With lineage derived from the noble {ParentBreed}, this breed carries both grace and strength. ";
+                description += $"With lineage derived from the noble '{ParentBreed}', this breed carries both grace and strength. ";
             }
             else
             {
                 description += $"It has developed a unique identity through generations of natural traits and breeding. ";
             }
 
-            description += $"Known for its loyalty and playful nature, the {DogName} is a perfect companion for families and individuals alike. " +
-                           $"On average, it enjoys a lifespan of around {LifeSpan} years, bringing years of joy and unforgettable memories.";
+            description += $"Known for its loyalty and playful nature, the '{DogName}' is a perfect companion for families and individuals alike. " +
+                           $"On average, it enjoys a lifespan of around '{LifeSpan}' years, bringing years of joy and unforgettable memories.";
 
             return Json(new { description });
         }

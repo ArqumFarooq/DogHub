@@ -159,6 +159,7 @@ D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.dll
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Host.SystemWeb.dll
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.Cookies.dll
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.dll
+D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.Google.dll
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.Jwt.dll
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.OAuth.dll
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Web.Infrastructure.dll
@@ -201,6 +202,7 @@ D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Cors.xml
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Host.SystemWeb.xml
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.xml
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.Cookies.xml
+D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.Google.xml
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.Jwt.xml
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.Owin.Security.OAuth.xml
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Newtonsoft.Json.xml
@@ -230,4 +232,3 @@ D:\DogHub\DogHubManagementSystem\DogHub\obj\Debug\DogHub.csproj.CoreCompileInput
 D:\DogHub\DogHubManagementSystem\DogHub\obj\Debug\DogHub.csproj.CopyComplete
 D:\DogHub\DogHubManagementSystem\DogHub\obj\Debug\DogHub.dll
 D:\DogHub\DogHubManagementSystem\DogHub\obj\Debug\DogHub.pdb
-D:\DogHub\DogHubManagementSystem\DogHub\obj\Debug\DogHub.csprojAssemblyReference.cache

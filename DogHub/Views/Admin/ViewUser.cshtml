@@ -46,10 +46,6 @@
                         <label for="modal-name" class="col-form-label text-bold">Email:</label>
                         <input type="email" class="form-control" placeholder="Enter Valid Email Here" id="updateEmail" name="Email">
                     </div>
-                    @*<div class="form-group">
-                        <label for="modal-name" class="col-form-label text-bold">Password:</label>
-                        <input type="password" class="form-control" placeholder="Enter Valid Password Here" id="updatePassword" name="Password">
-                    </div>*@
                     <div class="modal-footer">
                         <button type="submit" value="submit" class="btn btn-primary">Update</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -262,7 +258,6 @@
                 $('#updateId').val(response.PK_UserId);
                 $('#updateUserName').val(response.UserName);
                 $('#updateEmail').val(response.Email);
-                //$('#updatePassword').val(response.Password);
                 $('#updateModal').modal('show');
                 $('#loadImg').hide();
             },

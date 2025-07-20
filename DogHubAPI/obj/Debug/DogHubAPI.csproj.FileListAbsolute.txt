@@ -1,5 +1,3 @@
-D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Net.Http.Formatting.dll
-D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Mvc.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\App_Data\dogs.json
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\DogHubAPI.dll.config
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\DogHubAPI.dll
@@ -69,6 +67,7 @@ D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Owin.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Swashbuckle.Core.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Buffers.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Memory.dll
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Net.Http.Formatting.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Numerics.Vectors.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Runtime.CompilerServices.Unsafe.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Threading.Tasks.Extensions.dll
@@ -86,6 +85,9 @@ D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.WebPages.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.WebPages.Razor.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\WebActivatorEx.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\WebGrease.dll
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Microsoft.AspNet.Identity.Owin.dll
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Microsoft.Owin.Security.Google.dll
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Microsoft.AspNet.Identity.Core.dll
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\DogHub.pdb
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\DogHub.dll.config
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\EntityFramework.xml
@@ -111,6 +113,7 @@ D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Http.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Http.Cors.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Http.Owin.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Http.WebHost.xml
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Mvc.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Razor.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.WebPages.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.WebPages.Deployment.xml
@@ -118,6 +121,9 @@ D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.WebPages.Razor.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\System.Web.Optimization.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Antlr3.Runtime.pdb
 D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Microsoft.AspNet.Identity.Owin.xml
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Microsoft.Owin.Security.Google.xml
+D:\DogHub\DogHubManagementSystem\DogHubAPI\bin\Microsoft.AspNet.Identity.Core.xml
 D:\DogHub\DogHubManagementSystem\DogHubAPI\obj\Debug\DogHubAPI.csprojAssemblyReference.cache
 D:\DogHub\DogHubManagementSystem\DogHubAPI\obj\Debug\DogHubAPI.csproj.CoreCompileInputs.cache
 D:\DogHub\DogHubManagementSystem\DogHubAPI\obj\Debug\DogHubAPI.csproj.CopyComplete

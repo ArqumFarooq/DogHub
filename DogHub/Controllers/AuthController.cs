@@ -8,6 +8,9 @@ using DogHub.Models;
 using DogHub.BL;
 using DogHub.HelpingClasses;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
+using System.Threading.Tasks;
 
 namespace DogHub.Controllers
 {
@@ -15,6 +18,19 @@ namespace DogHub.Controllers
     {
         private readonly DogHubEntities db = new DogHubEntities();
         private readonly GeneralPurpose gp = new GeneralPurpose();
+        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
+
+        private void LogAudit(string actionType, string affectedTable, string details, int? userId = null)
+        {
+            var auditBL = new AuditLogBL();
+            auditBL.AddAuditLog(
+                actionType: actionType,
+                affectedTable: affectedTable,
+                auditDetails: details,
+                createdById: userId,
+                de: db
+            );
+        }
 
         #region Login
         [AllowAnonymous]
@@ -45,6 +61,7 @@ namespace DogHub.Controllers
 
                 if (user == null)
                 {
+                    LogAudit("Login", "Users", $"Failed login attempt with email: {Email}", user.PK_UserId);
                     return RedirectToAction("Login", new { msg = "Incorrect Email/Password!", color = "red" });
                 }
 
@@ -63,27 +80,88 @@ namespace DogHub.Controllers
                 var authManager = ctx.Authentication;
                 authManager.SignIn(new AuthenticationProperties
                 {
-                    IsPersistent = true, // This remembers the login
-                    ExpiresUtc = DateTime.UtcNow.AddDays(2) // Optional: expire in 2 days
+                    IsPersistent = true, // remember the login
+                    ExpiresUtc = DateTime.UtcNow.AddDays(7) // expire in 7 days
                 }, identity);
 
                 if(user.IsAdmin == true)
                 {
+                    LogAudit("Login", "Users", $"Admin logged in with email: {Email}", user.PK_UserId);
                     return RedirectToAction("Dashboard", "Admin");
                 }
                 else
                 {
+                    LogAudit("Login", "Users", $"User logged in with email: {Email}", user.PK_UserId);
                     return RedirectToAction("Dashboard", "Admin");
-                    //return RedirectToAction("Login", "Auth", new { msg = "Only User is allowed to login", color = "red" });
                 }
                 
             }
             catch
             {
-                //return RedirectToAction("Index", "Error");
+                LogAudit("Login", "Users", "Unexpected error occurred", 0);
                 return RedirectToAction("Login", new { msg = "Unexpected error occurred.", color = "red" });
             }
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            return new ChallengeResult(
+                provider,
+                Url.Action("ExternalLoginCallback", "Auth", new { ReturnUrl = returnUrl })
+            );
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
+            {
+                LogAudit("External Login", "Users", "Google Login info not found", 0);
+                return RedirectToAction("Login", "Auth", new { msg = "Google Login info not found. Please try again.", color = "red" });
+            }
+
+            var user = new UserBL().GetActiveUsers(db).Where(x => x.Email == loginInfo.Email).FirstOrDefault(); 
+            if (user == null)
+            {
+                var newUser = new User
+                {
+                    UserName = loginInfo.DefaultUserName,
+                    Email = loginInfo.Email,
+                    IsActive = true,
+                    IsAdmin = false,
+                    AuthId = loginInfo.Login.ProviderKey,
+                    AuthProvider = loginInfo.Login.LoginProvider,
+                    SysCreatedDate = DateTime.Now
+
+                };
+
+                bool success =  new UserBL().AddUser(newUser, db);
+                if (success) {
+                    LogAudit("External Register", "Users", $"New user registered via  Google Credentials:{loginInfo.Email}", 0);
+                }
+                user = newUser;
+            }
+
+            var identity = new ClaimsIdentity(new[] {
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Sid, user.PK_UserId.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim("UserName", user.UserName),
+            new Claim(ClaimTypes.Role, user.IsAdmin == true ?  "Admin" : "User")}, "ApplicationCookie");
+
+            AuthenticationManager.SignIn(new AuthenticationProperties
+            {
+                IsPersistent = true, // remember the login
+                ExpiresUtc = DateTime.UtcNow.AddDays(7) // expire in 7 days
+            }, identity);
+
+            return RedirectToAction("Dashboard", "Admin");
+        }
+        
         #endregion
 
         #region Register
@@ -103,15 +181,18 @@ namespace DogHub.Controllers
             {
                 if (user.Password != ConfirmPassword)
                 {
+                    LogAudit("Register","Users", $"Failed Registeration attempt because Passwords do not match",0);
                     return RedirectToAction("Register", "Auth", new { msg = "Passwords do not match", color = "red" });
                 }
                 if (user.Email.ToLower() != ConfirmEmail.ToLower())
                 {
+                    LogAudit("Register", "Users", $"Failed Registeration attempt because Emails do not match", 0);
                     return RedirectToAction("Register", "Auth", new { msg = "Emails do not match", color = "red" });
                 }
 
                 if (!gp.ValidateEmail(user.Email))
                 {
+                    LogAudit("Register", "Users", $"Failed Registeration attempt because Email already exist", 0);
                     return RedirectToAction("Register", "Auth", new { msg = "Email already exist, Try another!", color = "red" });
                 }
 
@@ -124,20 +205,21 @@ namespace DogHub.Controllers
 
                 if (success)
                 {
+                    LogAudit("Register","Users", "New user registered", user.PK_UserId);
                     return RedirectToAction("Login", "Auth", new { msg = "Registration successful! Please login.", color = "green" });
                 }
-
+                LogAudit("Register", "Users", "Something went wrong with user registeration", 0);
                 return RedirectToAction("Register", "Auth", new { msg = "Something went wrong", color = "red" });
             }
             catch
             {
+                LogAudit("Register", "Users", "Unexpected error occurred with user registeration", 0);
                 return RedirectToAction("Register", "Auth", new { msg = "Unexpected error occurred", color = "red" });
             }
         }
         #endregion
 
         #region ForgotPassword
-        // GET: Auth/ForgotPassword
         [AllowAnonymous]
         public ActionResult ForgotPassword(string msg = "", string color = "black")
         {
@@ -146,7 +228,6 @@ namespace DogHub.Controllers
             return View();
         }
 
-        // POST: Auth/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         public ActionResult PostForgotPassword(string email)
@@ -162,6 +243,7 @@ namespace DogHub.Controllers
                 bool isSent = MailSender.SendForgotPasswordEmail(email, Request.Url.GetLeftPart(UriPartial.Authority) + "/Auth/ResetPassword?email=" + StringCipher.Base64Encode(email) + "&time=" + StringCipher.Base64Encode(DateTime.Now.ToString("MM/dd/yyyy")));
                 if (isSent)
                 {
+                    LogAudit("Forgot Password","Users", "Reset password link sent", user.PK_UserId);
                     return RedirectToAction("Login", "Auth", new { msg = "Reset link sent to your email", color = "green" });
                 }
                 else
@@ -177,7 +259,6 @@ namespace DogHub.Controllers
         #endregion
 
         #region ResetPassword
-        // GET: Auth/ResetPassword
         [AllowAnonymous]
         public ActionResult ResetPassword(string email = "", string time = "", string msg = "", string color = "black")
         {
@@ -203,7 +284,6 @@ namespace DogHub.Controllers
             }
         }
 
-        // POST: Auth/ResetPassword
         [HttpPost]
         [AllowAnonymous]
         public ActionResult PostResetPassword(string Email = "", string Time = "", string newPassword = "", string ConfirmPassword = "")
@@ -222,6 +302,7 @@ namespace DogHub.Controllers
 
                 if (check == true)
                 {
+                    LogAudit("Reset Password","User", "Password reset successful", user.PK_UserId);
                     return RedirectToAction("Login", "Auth", new { msg = "Password reset successful, Try Login", color = "green" });
                 }
                 else
@@ -270,10 +351,12 @@ namespace DogHub.Controllers
                 user.UserName = _user.UserName.Trim();
                 user.Email = _user.Email.Trim();
                 user.Password = StringCipher.Encrypt(_user.Password.Trim());
+                user.SysModifiedDate = DateTime.Now;
 
                 bool chkUser = new UserBL().UpdateUser(user, db);
                 if (chkUser == true)
                 {
+                    LogAudit("Update Profile","Users", "Profile updated successfully", user.PK_UserId);
                     return RedirectToAction("UpdateProfile", "Auth", new { msg = "Profile updated successfully!", color = "green" });
                 }
                 else
@@ -295,8 +378,41 @@ namespace DogHub.Controllers
             var ctx = Request.GetOwinContext();
             var authManager = ctx.Authentication;
             authManager.SignOut("ApplicationCookie");
+            var user = gp.ValidateLoggedinUser();
+            if (user != null)
+            {
+                LogAudit("Logout","User", $"User logged out: {user.Email}", user.PK_UserId);
+            }
             return RedirectToAction("Login");
         }
         #endregion
+    }
+
+    public class ChallengeResult : HttpUnauthorizedResult
+    {
+        public ChallengeResult(string provider, string redirectUri)
+            : this(provider, redirectUri, null) { }
+        public ChallengeResult(string provider, string redirectUri, string userId)
+        {
+            LoginProvider = provider;
+            RedirectUri = redirectUri;
+            UserId = userId;
+        }
+        public string LoginProvider { get; set; }
+        public string RedirectUri { get; set; }
+        public string UserId { get; set; }
+        public override void ExecuteResult(ControllerContext context)
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = RedirectUri,
+                Dictionary = {
+                    ["LoginProvider"] = LoginProvider,
+                    ["RedirectUri"] = RedirectUri
+                }
+            };
+            if (UserId != null) properties.Dictionary["XsrfId"] = UserId;
+            context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+        }
     }
 }

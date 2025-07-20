@@ -7,7 +7,6 @@ namespace DogHub.HelpingClasses
 {
     public class MailSender
     {
-        // SMTP Config (You can load these from Web.config for security)
         private const string FromName = "DogHub Support";
         private const string SmtpHost = "smtp.gmail.com";
         private static readonly string FromEmail = ConfigurationManager.AppSettings["SmtpEmail"];
@@ -90,7 +89,6 @@ namespace DogHub.HelpingClasses
             }
             catch (Exception ex)
             {
-                // Optionally log exception
                 return false;
             }
         }

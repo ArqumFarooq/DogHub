@@ -8,6 +8,8 @@ namespace DogHub.DAL
 {
     public class DogBreedDAL
     {
+        #region DogBreed
+
         public List<DogBreed> GetAllDogBreeds(DogHubEntities db)
         {
             return db.DogBreeds.Where(x => x.IsDeleted == false || x.IsDeleted == null).ToList();
@@ -106,7 +108,7 @@ namespace DogHub.DAL
                 return false;
             }
         }
-
+        #endregion
 
         #region casecade deletion
         public DogBreed GetBreedById(int id, DogHubEntities db)

@@ -10,6 +10,7 @@ namespace DogHub.DAL
 {
     public class UserDAL
     {
+        #region User
         public List<User> GetAllUsers(DogHubEntities db)
         {
             return db.Users.ToList();
@@ -57,6 +58,7 @@ namespace DogHub.DAL
                 return false;
             }
         }
+        #endregion
 
         #region Seed_AdminUser
         public bool Seed_AddAdminUser(DogHubEntities db)
@@ -78,6 +80,5 @@ namespace DogHub.DAL
             return AddUser(admin, db);
         }
         #endregion
-
     }
 }

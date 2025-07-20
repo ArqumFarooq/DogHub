@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "DogHub Login";
     Layout = null;
 }
 
@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>DogHub Login</title>
     <link rel="shortcut icon" type="image/x-icon" href="~/Content/assets/images/Favicons/D-Fav.jpg">
 
     <!-- Global stylesheets -->
@@ -31,10 +31,8 @@
     <!-- /core JS files -->
     <!-- Theme JS files -->
     <script type="text/javascript" src="~/Content/assets/js/plugins/forms/styling/uniform.min.js"></script>
-
     <script type="text/javascript" src="~/Content/assets/js/core/app.js"></script>
     <script type="text/javascript" src="~/Content/assets/js/pages/login.js"></script>
-
     <script type="text/javascript" src="~/Content/assets/js/plugins/ui/ripple.min.js"></script>
     <!-- /theme JS files -->
 
@@ -97,21 +95,25 @@
                         <a class="pull-right" href="@Url.Action("ForgotPassword", "Auth")">Forgot Password?</a>
                         <br />
                         <div class="content-divider text-muted form-group"><span>or sign in with</span></div>
-                        <ul class="list-inline form-group list-inline-condensed text-center">
-                            <li><a href="#" class="btn border-indigo text-indigo btn-flat btn-icon btn-rounded"><i class="icon-facebook"></i></a></li>
-                            <li><a href="#" class="btn border-pink-300 text-pink-300 btn-flat btn-icon btn-rounded"><i class="icon-google"></i></a></li>
-                            <li><a href="#" class="btn border-info text-info btn-flat btn-icon btn-rounded"><i class="icon-twitter"></i></a></li>
-                        </ul>
                         <div class="content-divider text-muted form-group"><span>Don't have an account?</span></div>
                         <a href="@Url.Action("Register", "Auth")" class="btn bg-pink btn-block content-group">New Registration</a>
-                        @*<span class="help-block text-center no-margin">By continuing, you're confirming that you've read our <a href="#">Terms &amp; Conditions</a> and <a href="#">Cookie Policy</a></span>*@
-                    </div>
                 </form>
-                <!-- /advanced login -->
+                <ul class="list-inline form-group list-inline-condensed text-center">
+                    <li>
+                        <form action="@Url.Action("ExternalLogin", "Auth", new { ReturnUrl = "/" })" method="post" id="googleLoginForm" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" name="provider" value="Google" class="btn border-pink-300 text-pink-300 btn-flat btn-icon btn-rounded">
+                                <i class="icon-google"></i>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
             </div>
-            <!-- /main content -->
+            <!-- /advanced login -->
         </div>
-        <!-- /page content -->
+        <!-- /main content -->
+    </div>
+    <!-- /page content -->
     </div>
     <!-- /page container -->
     <!-- footer -->
@@ -131,6 +133,5 @@
         </div>
     </div>
     <!-- /footer -->
-
 </body>
 </html>

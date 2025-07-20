@@ -9,10 +9,12 @@ namespace DogHub.DAL
 {
     public class AuditLogDAL
     {
+        #region AuditLog
         public List<AuditLog> GetAllAuditLogs(DogHubEntities db)
         {
             return db.AuditLogs.ToList();
         }
+
         public AuditLog GetAuditLogById(int id, DogHubEntities db)
         {
             return db.AuditLogs.FirstOrDefault(x => x.PK_AuditLogId == id);
@@ -23,5 +25,6 @@ namespace DogHub.DAL
             de.AuditLogs.Add(log);
             de.SaveChanges();
         }
+        #endregion
     }
 }

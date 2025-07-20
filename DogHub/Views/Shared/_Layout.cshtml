@@ -147,6 +147,30 @@
                                     </ul>
                                 </li>
                             }
+                            @if (loggedinUser.IsAdmin == false)
+                            {
+                                <li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li>
+                                <li><a href="@Url.Action("Dashboard", "Admin")"><i class="icon-home4"></i> <span>User Dashboard</span></a></li>
+                                <li>
+                                    <a href="#"><i class="fa fa-paw"></i> <span>Manage DogBreed</span></a>
+                                    <ul>
+                                        <li><a href="@Url.Action("AddDogBreed", "Admin")">Add Dog Breed</a></li>
+                                        <li><a href="@Url.Action("ViewDogBreed", "Admin")">View Dog Breeds Record</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="icon-profile"></i> <span>PROFILE</span></a>
+                                    <ul>
+                                        <li><a href="@Url.Action("UpdateProfile", "Auth")">Profile Info </a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="icon-switch2"></i> <span>Logout</span></a>
+                                    <ul>
+                                        <li><a href="@Url.Action("Logout", "Auth")">Logout</a></li>
+                                    </ul>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>

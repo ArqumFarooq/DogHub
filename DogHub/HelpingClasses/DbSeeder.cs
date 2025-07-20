@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 
 namespace DogHub.HelpingClasses
 {
@@ -37,9 +38,9 @@ namespace DogHub.HelpingClasses
 
         private static void SeedDogBreeds(DogHubEntities db)
         {
-            if (db.DogBreeds.Any()) return; // Avoid reseeding
+            if (db.DogBreeds.Any()) return;
 
-            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"App_Data\dog.json");
+            string jsonPath = HttpContext.Current.Server.MapPath("~/App_Data/dogs.json");
             if (!File.Exists(jsonPath)) return;
 
             var dogBL = new DogBreedBL();
@@ -52,10 +53,11 @@ namespace DogHub.HelpingClasses
                     actionType: "Seed",
                     affectedTable: "DogBreeds",
                     auditDetails: "Dog breeds seeded from JSON file.",
-                    createdById: null, 
+                    createdById: null,
                     de: db
                 );
             }
         }
+
     }
 }

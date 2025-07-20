@@ -7,6 +7,7 @@ namespace DogHub.BL
 {
     public class AuditLogBL
     {
+        #region AuditLog
         public List<AuditLog> GetAllAuditLogs(DogHubEntities db)
         {
             return new AuditLogDAL().GetAllAuditLogs(db);
@@ -30,5 +31,6 @@ namespace DogHub.BL
 
             new AuditLogDAL().AddAuditLog(log, de);
         }
+        #endregion
     }
 }
