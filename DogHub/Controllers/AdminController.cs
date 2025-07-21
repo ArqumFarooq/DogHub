@@ -218,6 +218,7 @@ namespace DogHub.Controllers
                 User u = new UserBL().GetUserById(_user.PK_UserId, de);
                 u.UserName = _user.UserName.Trim();
                 u.Email = _user.Email.Trim();
+                u.SysModifiedDate = DateTime.Now;
 
                 bool checkUser = new UserBL().UpdateUser(u, de);
                 if (checkUser == true)
@@ -246,6 +247,7 @@ namespace DogHub.Controllers
                 }
                 User u = new UserBL().GetUserById(id, de);
                 u.IsActive = false;
+                u.SysModifiedDate = DateTime.Now;
 
                 bool checkUser = new UserBL().UpdateUser(u, de);
                 if (checkUser == true)
@@ -479,25 +481,20 @@ namespace DogHub.Controllers
                     return RedirectToAction("Login", "Auth", new { msg = "Session Expired! Please Login", color = "red" });
                 }
 
-                bool check = gp.ISDogBreedExist(_dogBreed.DogName);
+                DogBreed u = new DogBreedBL().GetBreedById(_dogBreed.PK_DogBreedId, de);
+                string ImageFilePath = string.Empty;
+
+                bool check = gp.ISDogBreedExist(_dogBreed.DogName, u.PK_DogBreedId);
                 if (check == false)
                 {
                     return RedirectToAction("ViewDogBreed", "Admin", new { msg = "Dog Breed already exists. Try another!", color = "red" });
                 }
+
                 bool chk = gp.ISDogNameANDParentSame(_dogBreed.DogName, _dogBreed.ParentBreedId);
                 if (chk)
                 {
                     return RedirectToAction("AddDogBreed", "Admin", new { msg = "Dog Breed Name & Parent Name can't be same.", color = "red" });
                 }
-
-                DogBreed u = new DogBreedBL().GetBreedById(_dogBreed.PK_DogBreedId, de);
-                u.DogName = _dogBreed.DogName.Trim();
-                u.ParentBreedId = _dogBreed.ParentBreedId;
-                u.Origin = _dogBreed.Origin.Trim();
-                u.LifeSpan = _dogBreed.LifeSpan.Trim();
-                u.Description = _dogBreed.Description.Trim();
-                u.SysCreatedID = 1;
-                u.SysModifiedDate = DateTime.Now;
 
                 if (ImageFile != null && ImageFile.ContentLength > 0)
                 {
@@ -526,12 +523,22 @@ namespace DogHub.Controllers
 
                     ImageFile.SaveAs(fullPath);
                     u.ImageUrl = filePath;
+                    ImageFilePath = filePath;
                 }
 
                 if (!string.IsNullOrEmpty(DogImageUrl))
                 {
                     u.ImageUrl = DogImageUrl;
                 }
+
+                u.DogName = _dogBreed.DogName.Trim();
+                u.ParentBreedId = _dogBreed.ParentBreedId;
+                u.Origin = _dogBreed.Origin.Trim();
+                u.LifeSpan = _dogBreed.LifeSpan.Trim();
+                u.Description = _dogBreed.Description.Trim();
+                u.SysModifiedID = 1;
+                u.SysModifiedDate = DateTime.Now;
+                u.ImageUrl = string.IsNullOrEmpty(ImageFilePath) && string.IsNullOrEmpty(DogImageUrl) ? "" : !string.IsNullOrEmpty(ImageFilePath) ? ImageFilePath : DogImageUrl;
 
                 bool checkdog = new DogBreedBL().UpdateDogBreed(u, de);
                 if (checkdog == true)
@@ -560,16 +567,18 @@ namespace DogHub.Controllers
                 }
                 DogBreed u = new DogBreedBL().GetBreedById(id, de);
                 u.IsDeleted = true;
+                u.SysModifiedDate = DateTime.Now;
+                u.SysModifiedID = 1;
 
                 bool checkUser = new DogBreedBL().DeleteDogBreed(u.PK_DogBreedId, de);
                 if (checkUser == true)
                 {
                     LogAudit("DeletedDogBreed", "DogBreeds", $"DogBreed Record Deleted Successfully by admin: {u.DogName}", 1);
-                    return RedirectToAction("ViewUser", "Admin", new { msg = "Record Deleted successfully", color = "green" });
+                    return RedirectToAction("ViewDogBreed", "Admin", new { msg = "Record Deleted successfully", color = "green" });
                 }
                 else
                 {
-                    return RedirectToAction("ViewUser", "Admin", new { msg = "Somethings' Wrong", color = "red" });
+                    return RedirectToAction("ViewDogBreed", "Admin", new { msg = "Somethings' Wrong", color = "red" });
                 }
             }
             catch
@@ -646,6 +655,7 @@ namespace DogHub.Controllers
                     LifeSpan = d.LifeSpan,
                     Description = d.Description,
                     ImageUrl = d.ImageUrl,
+                    ParentBreedName = d.ParentBreed?.DogName ?? "-",
                     SubBreedCount = d.SubBreeds.Count
                 };
 
@@ -704,7 +714,7 @@ namespace DogHub.Controllers
 
             //    return Json(new { description = aiDescription });
             #endregion
-
+            ParentBreed = (ParentBreed == "-- Select Parent Breed (optional)--") ? null : ParentBreed;
             string description = $"The '{DogName}' is a remarkable breed that traces its roots back to '{Origin}'. ";
 
             if (!string.IsNullOrWhiteSpace(ParentBreed) && ParentBreed != "-- Select Parent Breed (optional)--")
@@ -794,6 +804,9 @@ namespace DogHub.Controllers
 
                 udto.Add(obj);
             }
+
+            udto.OrderByDescending(x => x.PK_AuditLogId).ToList();
+
             return Json(new { data = udto, draw = Request["draw"], recordsTotal = totalrows, recordsFiltered = totalrowsafterfilterinig }, JsonRequestBehavior.AllowGet);
         }
 

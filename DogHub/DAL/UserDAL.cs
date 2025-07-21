@@ -39,7 +39,7 @@ namespace DogHub.DAL
                 db.SaveChanges();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 return false;
             }

@@ -61,7 +61,6 @@
 
             <!-- Main content -->
             <div class="content-wrapper">
-
                 <!-- Advanced login -->
                 <form action="@Url.Action("PostLogin", "Auth")" method="post" class="login-form">
                     <div class="panel panel-body">
@@ -75,14 +74,14 @@
                         </div>
 
                         <div class="form-group has-feedback has-feedback-left">
-                            <input type="email" class="form-control" placeholder="Enter Email" required name="Email">
+                            <input type="email" class="form-control" placeholder="Enter Email" required name="Email" id="Email">
                             <div class="form-control-feedback">
                                 <i class="icon-mail5 text-muted"></i>
                             </div>
                         </div>
 
                         <div class="form-group has-feedback has-feedback-left">
-                            <input type="password" class="form-control" placeholder="Password" required name="Password">
+                            <input type="password" class="form-control" placeholder="Password" required name="Password" id="Password">
                             <div class="form-control-feedback">
                                 <i class="icon-lock2 text-muted"></i>
                             </div>
@@ -94,10 +93,12 @@
 
                         <a class="pull-right" href="@Url.Action("ForgotPassword", "Auth")">Forgot Password?</a>
                         <br />
-                        <div class="content-divider text-muted form-group"><span>or sign in with</span></div>
+
                         <div class="content-divider text-muted form-group"><span>Don't have an account?</span></div>
                         <a href="@Url.Action("Register", "Auth")" class="btn bg-pink btn-block content-group">New Registration</a>
                 </form>
+                <br />
+                <div class="content-divider text-muted form-group"><span>or sign in with</span></div>
                 <ul class="list-inline form-group list-inline-condensed text-center">
                     <li>
                         <form action="@Url.Action("ExternalLogin", "Auth", new { ReturnUrl = "/" })" method="post" id="googleLoginForm" style="display:inline;">

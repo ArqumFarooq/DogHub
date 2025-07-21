@@ -32,11 +32,13 @@ namespace DogHub.BL
 
         public bool AddUser(User user, DogHubEntities db)
         {
-            if (string.IsNullOrWhiteSpace(user.UserName) || string.IsNullOrWhiteSpace(user.Password) || string.IsNullOrWhiteSpace(user.Email))
+            if (string.IsNullOrWhiteSpace(user.AuthProvider))
             {
-                return false;
+                if (string.IsNullOrWhiteSpace(user.UserName) || string.IsNullOrWhiteSpace(user.Password) || string.IsNullOrWhiteSpace(user.Email))
+                {
+                    return false;
+                }
             }
-
             return new UserDAL().AddUser(user, db);
         }
 

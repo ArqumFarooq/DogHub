@@ -82,26 +82,50 @@
                 var badgeClass = '';
 
                 switch ((full.ActionType || '').toLowerCase()) {
-                    case 'create':
+                    case 'Register':
                         badgeClass = 'badge bg-success'; 
                         break;
-                    case 'update':
-                        badgeClass = 'badge bg-violet text-dark'; 
+                    case 'Login':
+                        badgeClass = 'badge bg-secondary text-bold'; 
                         break;
-                    case 'delete':
-                        badgeClass = 'badge  bg-pink-400'; 
+                    case 'Logout':
+                        badgeClass = 'badge bg-dark text-bold';
+                        break;
+                    case 'Update Profile':
+                        badgeClass = 'badge  bg-violet-400 text-bold'; 
+                        break;
+                    case 'Forgot Password':
+                        badgeClass = 'badge  bg-pink-400 text-bold'; 
+                        break;
+                    case 'Reset Password':
+                        badgeClass = 'badge  bg-purple-400'; 
+                        break;
+                    case 'External Login':
+                        badgeClass = 'badge bg-indigo-400'; 
+                        break;
+                    case 'External Register':
+                        badgeClass = 'badge  bg-blue-400'; 
+                        break;
+                    case 'AddDogBreed':
+                        badgeClass = 'badge bg-teal-400';
+                        break;
+                    case 'UpdatedDogBreed':
+                        badgeClass = 'badge  bg-green-400'; 
+                        break;
+                    case 'DeletedDogBreed':
+                        badgeClass = 'badge  bg-orange-400'; 
                         break;
                     default:
                         badgeClass = 'badge bg-secondary'; 
                 }
 
-                return `<span class="${badgeClass}">${full.ActionType}</span>`;
+                return `<span class="${badgeClass}" style="color: black;">${full.ActionType}</span>`;
             }
         },
         {
             "targets": 1,
             'className': 'col-lg-3',
-            "orderable": false,
+            "orderable": true,
             "render": function (data, type, full, meta) {
                 return full.AffectedTable;
             }
@@ -109,7 +133,7 @@
         {
             "targets": 2,
             'className': 'col-lg-7',
-            "orderable": false,
+            "orderable": true,
             "render": function (data, type, full, meta) {
                 return full.AuditDetails;
             }
@@ -160,29 +184,53 @@
                         'className': 'col-lg-2',
                         "orderable": true,
                         "render": function (data, type, full, meta) {
-                            var badgeClass = '';
+                        var badgeClass = '';
 
-                            switch ((full.ActionType || '').toLowerCase()) {
-                                case 'create':
-                                    badgeClass = 'badge bg-success'; 
-                                    break;
-                                case 'update':
-                                    badgeClass = 'badge bg-violet text-dark'; 
-                                    break;
-                                case 'delete':
-                                    badgeClass = 'badge bg-pink-400'; 
-                                    break;
-                                default:
-                                    badgeClass = 'badge bg-secondary'; 
-                            }
-
-                            return `<span class="${badgeClass}">${full.ActionType}</span>`;
+                        switch ((full.ActionType || '').toLowerCase()) {
+                            case 'Register':
+                                badgeClass = 'badge bg-success';
+                                break;
+                            case 'Login':
+                                badgeClass = 'badge bg-secondary';
+                                break;
+                            case 'Logout':
+                                badgeClass = 'badge bg-dark';
+                                break;
+                            case 'Update Profile':
+                                badgeClass = 'badge  bg-violet-400';
+                                break;
+                            case 'Forgot Password':
+                                badgeClass = 'badge  bg-pink-400';
+                                break;
+                            case 'Reset Password':
+                                badgeClass = 'badge  bg-purple-400';
+                                break;
+                            case 'External Login':
+                                badgeClass = 'badge bg-indigo-400';
+                                break;
+                            case 'External Register':
+                                badgeClass = 'badge  bg-blue-400';
+                                break;
+                            case 'AddDogBreed':
+                                badgeClass = 'badge bg-teal-400';
+                                break;
+                            case 'UpdatedDogBreed':
+                                badgeClass = 'badge  bg-green-400';
+                                break;
+                            case 'DeletedDogBreed':
+                                badgeClass = 'badge  bg-orange-400';
+                                break;
+                            default:
+                                badgeClass = 'badge bg-secondary';
                         }
+
+                            return `<span class="${badgeClass}" style="color: black;">${full.ActionType}</span>`;
+                    }
                     },
                     {
                         "targets": 1,
                         'className': 'col-lg-3',
-                        "orderable": false,
+                        "orderable": true,
                         "render": function (data, type, full, meta) {
                             return full.AffectedTable;
                         }
@@ -190,7 +238,7 @@
                     {
                         "targets": 2,
                         'className': 'col-lg-7',
-                        "orderable": false,
+                        "orderable": true,
                         "render": function (data, type, full, meta) {
                             return full.AuditDetails;
                         }

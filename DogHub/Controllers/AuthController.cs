@@ -84,7 +84,7 @@ namespace DogHub.Controllers
                     ExpiresUtc = DateTime.UtcNow.AddDays(7) // expire in 7 days
                 }, identity);
 
-                if(user.IsAdmin == true)
+                if (user.IsAdmin == true)
                 {
                     LogAudit("Login", "Users", $"Admin logged in with email: {Email}", user.PK_UserId);
                     return RedirectToAction("Dashboard", "Admin");
@@ -94,7 +94,7 @@ namespace DogHub.Controllers
                     LogAudit("Login", "Users", $"User logged in with email: {Email}", user.PK_UserId);
                     return RedirectToAction("Dashboard", "Admin");
                 }
-                
+
             }
             catch
             {
@@ -124,13 +124,14 @@ namespace DogHub.Controllers
                 return RedirectToAction("Login", "Auth", new { msg = "Google Login info not found. Please try again.", color = "red" });
             }
 
-            var user = new UserBL().GetActiveUsers(db).Where(x => x.Email == loginInfo.Email).FirstOrDefault(); 
+            var user = new UserBL().GetActiveUsers(db).Where(x => x.Email == loginInfo.Email).FirstOrDefault();
             if (user == null)
             {
                 var newUser = new User
                 {
                     UserName = loginInfo.DefaultUserName,
                     Email = loginInfo.Email,
+                    Password = StringCipher.Encrypt("123"),
                     IsActive = true,
                     IsAdmin = false,
                     AuthId = loginInfo.Login.ProviderKey,
@@ -139,8 +140,9 @@ namespace DogHub.Controllers
 
                 };
 
-                bool success =  new UserBL().AddUser(newUser, db);
-                if (success) {
+                bool success = new UserBL().AddUser(newUser, db);
+                if (success)
+                {
                     LogAudit("External Register", "Users", $"New user registered via  Google Credentials:{loginInfo.Email}", 0);
                 }
                 user = newUser;
@@ -161,7 +163,7 @@ namespace DogHub.Controllers
 
             return RedirectToAction("Dashboard", "Admin");
         }
-        
+
         #endregion
 
         #region Register
@@ -181,7 +183,7 @@ namespace DogHub.Controllers
             {
                 if (user.Password != ConfirmPassword)
                 {
-                    LogAudit("Register","Users", $"Failed Registeration attempt because Passwords do not match",0);
+                    LogAudit("Register", "Users", $"Failed Registeration attempt because Passwords do not match", 0);
                     return RedirectToAction("Register", "Auth", new { msg = "Passwords do not match", color = "red" });
                 }
                 if (user.Email.ToLower() != ConfirmEmail.ToLower())
@@ -205,7 +207,7 @@ namespace DogHub.Controllers
 
                 if (success)
                 {
-                    LogAudit("Register","Users", "New user registered", user.PK_UserId);
+                    LogAudit("Register", "Users", "New user registered", user.PK_UserId);
                     return RedirectToAction("Login", "Auth", new { msg = "Registration successful! Please login.", color = "green" });
                 }
                 LogAudit("Register", "Users", "Something went wrong with user registeration", 0);
@@ -243,7 +245,7 @@ namespace DogHub.Controllers
                 bool isSent = MailSender.SendForgotPasswordEmail(email, Request.Url.GetLeftPart(UriPartial.Authority) + "/Auth/ResetPassword?email=" + StringCipher.Base64Encode(email) + "&time=" + StringCipher.Base64Encode(DateTime.Now.ToString("MM/dd/yyyy")));
                 if (isSent)
                 {
-                    LogAudit("Forgot Password","Users", "Reset password link sent", user.PK_UserId);
+                    LogAudit("Forgot Password", "Users", "Reset password link sent", user.PK_UserId);
                     return RedirectToAction("Login", "Auth", new { msg = "Reset link sent to your email", color = "green" });
                 }
                 else
@@ -302,7 +304,7 @@ namespace DogHub.Controllers
 
                 if (check == true)
                 {
-                    LogAudit("Reset Password","User", "Password reset successful", user.PK_UserId);
+                    LogAudit("Reset Password", "User", "Password reset successful", user.PK_UserId);
                     return RedirectToAction("Login", "Auth", new { msg = "Password reset successful, Try Login", color = "green" });
                 }
                 else
@@ -356,7 +358,7 @@ namespace DogHub.Controllers
                 bool chkUser = new UserBL().UpdateUser(user, db);
                 if (chkUser == true)
                 {
-                    LogAudit("Update Profile","Users", "Profile updated successfully", user.PK_UserId);
+                    LogAudit("Update Profile", "Users", "Profile updated successfully", user.PK_UserId);
                     return RedirectToAction("UpdateProfile", "Auth", new { msg = "Profile updated successfully!", color = "green" });
                 }
                 else
@@ -381,7 +383,7 @@ namespace DogHub.Controllers
             var user = gp.ValidateLoggedinUser();
             if (user != null)
             {
-                LogAudit("Logout","User", $"User logged out: {user.Email}", user.PK_UserId);
+                LogAudit("Logout", "User", $"User logged out: {user.Email}", user.PK_UserId);
             }
             return RedirectToAction("Login");
         }

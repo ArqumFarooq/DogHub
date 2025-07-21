@@ -44,7 +44,7 @@
 
                         <div class="form-group has-feedback">
                             <label class="text-bold">Origin Country<span class="text-danger">*</span></label>
-                            <select name="Origin" id="Origin" class="form-control">
+                            <select name="Origin" id="Origin" class="form-control" required>
                                 <option value="">-- Select Country --</option>
                                 @if (ViewBag.Countries != null)
                                 {
@@ -58,7 +58,8 @@
 
                         <div class="form-group has-feedback">
                             <label class="text-bold">Life Span (in years)<span class="text-danger">*</span></label>
-                            <input type="number" step="0.1" class="form-control" name="LifeSpan" id="LifeSpan" min="0.1" placeholder="e.g., 12.5">
+                            <input type="number" step="0.1" class="form-control" name="LifeSpan" id="LifeSpan" min="0.1" placeholder="e.g., 12.5" required oninput="this.value = this.value < 1 ? '' : this.value;">
+                            @*<input type="number" step="0.1" class="form-control" name="LifeSpan" id="LifeSpan" min="0.1" placeholder="e.g., 12.5" required>*@
                         </div>
 
                         <div class="form-group has-feedback">
@@ -70,9 +71,12 @@
                         </div>
 
                         <div class="form-group has-feedback">
-                            <label class="text-bold">Upload a Dog Image or Fetch from AI</label>
-                            <input type="file" class="form-control" id="dogImageInput" name="ImageFile" accept="image/*" />
-
+                            @*<label class="text-bold">Upload New Image (optional) / Fetch From AI</label>*@
+                            <label class="text-bold">Please enter a valid dog breed name to fetch an image</label>
+                            @*<input type="file" class="form-control" id="dogImageInput" name="ImageFile" accept="image/*" />*@
+                            <div class="mt-2">
+                                <button type="button" id="getImage" class="btn bg-teal legitRipple">Get Dog Image</button>
+                            </div>
                             <div id="previewContainer" style="margin-top: 10px; display: none;">
                                 <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 200px; border: 1px solid #ddd; padding: 5px; border-radius: 5px;" />
                                 <p id="imageMessage" style="color: red; display: none;"></p>
@@ -85,7 +89,7 @@
 
                         <div class="text-right">
                             <button type="button" id="generateFromAI" class="btn bg-orange-800 legitRipple">Generate Description</button>
-                            <button type="button" id="getImage" class="btn bg-teal legitRipple">Get Dog Image</button>
+                            @*<button type="button" id="getImage" class="btn bg-teal legitRipple">Get Dog Image</button>*@
                             <button type="submit" class="btn btn-primary" id="sub">Create <i class="icon-checkmark3 position-right"></i></button>
                         </div>
 
@@ -98,76 +102,31 @@
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const input = document.getElementById("dogImageInput");
-
-        input.addEventListener("change", function () {
-            const file = this.files[0];
-            const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-
-            try {
-                if (!validTypes.includes(file.type)) {
-                    alert("Only image files (jpg, png, gif, webp) are allowed.");
-                    this.value = "";
-                    return;
-                }
-
-                if (file.size > 10 * 1024 * 1024) {
-                    alert("File size should not exceed 10MB.");
-                    this.value = "";
-                    return;
-                }
-
-                // No preview — file is accepted silently
-                console.log("Valid image selected:", file.name);
-
-            } catch (err) {
-                console.error("File upload error:", err);
-                alert("Something went wrong while validating the file.");
-                this.value = "";
-            }
-        });
-    });
-
     //document.addEventListener("DOMContentLoaded", function () {
     //    const input = document.getElementById("dogImageInput");
-    //    const previewContainer = document.getElementById("previewContainer");
-    //    const preview = document.getElementById("imagePreview");
-    //    const removeBtn = document.getElementById("removeImageBtn");
 
     //    input.addEventListener("change", function () {
     //        const file = this.files[0];
-    //        if (!file) return;
-
-    //        // Validate file type
     //        const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-    //        if (!validTypes.includes(file.type)) {
-    //            alert("Only image files (jpg, png, gif, webp) are allowed.");
+
+    //        try {
+    //            if (!validTypes.includes(file.type)) {
+    //                alert("Only image files (jpg, png, gif, webp) are allowed.");
+    //                this.value = "";
+    //                return;
+    //            }
+
+    //            if (file.size > 10 * 1024 * 1024) {
+    //                alert("File size should not exceed 10MB.");
+    //                this.value = "";
+    //                return;
+    //            }
+
+    //        } catch (err) {
+    //            console.error("File upload error:", err);
+    //            alert("Something went wrong while validating the file.");
     //            this.value = "";
-    //            previewContainer.style.display = "none";
-    //            return;
     //        }
-
-    //        // Validate size (2MB max)
-    //        if (file.size > 10 * 1024 * 1024) {
-    //            alert("File size should not exceed 2MB.");
-    //            this.value = "";
-    //            previewContainer.style.display = "none";
-    //            return;
-    //        }
-
-    //        const reader = new FileReader();
-    //        reader.onload = function (e) {
-    //            preview.src = e.target.result;
-    //            previewContainer.style.display = "block";
-    //        };
-    //        reader.readAsDataURL(file);
-    //    });
-
-    //    removeBtn.addEventListener("click", function () {
-    //        input.value = "";
-    //        preview.src = "#";
-    //        previewContainer.style.display = "none";
     //    });
     //});
 
@@ -223,7 +182,7 @@
             }
         });
     });
-    
+
     $('#getImage').click(function () {
 
         $('#loadImg').show();
@@ -247,7 +206,7 @@
             success: function (response) {
                 if (response.status === "success") {
                     $('#imagePreview').attr('src', response.message).show();
-                    $('#DogImageUrl').val(response.message); 
+                    $('#DogImageUrl').val(response.message);
                 } else {
                     $('#imageMessage').text("No image found for this dog breed.").show();
                     $('#previewContainer').hide();

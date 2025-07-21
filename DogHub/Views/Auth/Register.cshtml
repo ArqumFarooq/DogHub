@@ -56,7 +56,6 @@
         </div>
     </div>
     <!-- /main navbar -->
-
     <!-- Page container -->
     <div class="page-container">
 
@@ -90,7 +89,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group has-feedback">
-                                                <input type="text" class="form-control" placeholder="Your Email" name="Email" required="">
+                                                <input type="email" class="form-control" placeholder="Your Email" name="Email" required="">
                                                 <div class="form-control-feedback">
                                                     <i class="icon-mention text-muted"></i>
                                                 </div>
@@ -98,7 +97,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group has-feedback">
-                                                <input type="text" class="form-control" placeholder="Confirm Email" name="ConfirmEmail" required="">
+                                                <input type="email" class="form-control" placeholder="Confirm Email" name="ConfirmEmail" required="">
                                                 <div class="form-control-feedback">
                                                     <i class="icon-mention text-muted"></i>
                                                 </div>
@@ -109,7 +108,12 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group has-feedback">
-                                                <input type="password" class="form-control" placeholder="Create password" name="Password" required="">
+                                                <input type="password" class="form-control"
+                                                       placeholder="Password must be at least 8 characters long and include a number, an uppercase and a lowercase letter."
+                                                       name="Password"
+                                                       required
+                                                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
+                                                       title="Password must be at least 8 characters long and include a number, an uppercase and a lowercase letter.">
                                                 <div class="form-control-feedback">
                                                     <i class="icon-user-lock text-muted"></i>
                                                 </div>
@@ -118,13 +122,17 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group has-feedback">
-                                                <input type="password" class="form-control" placeholder="Confirm password" name="ConfirmPassword" required="">
+                                                <input type="password" class="form-control"
+                                                       placeholder="Confirm Password must be at least 8 characters long and include a number, an uppercase and a lowercase letter."
+                                                       name="ConfirmPassword"
+                                                       required>
                                                 <div class="form-control-feedback">
                                                     <i class="icon-user-lock text-muted"></i>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <div class="clearfix">
                                         <a href="@Url.Action("Login", "Auth")" class="btn btn-default pull-left"><i class="icon-arrow-left13 position-left"></i> Back to login form</a>
@@ -145,7 +153,6 @@
 
     </div>
     <!-- /page container -->
-
     <!-- Footer -->
     <div class="navbar navbar-default navbar-fixed-bottom footer">
         <ul class="nav navbar-nav visible-xs-block">
@@ -162,5 +169,26 @@
         </div>
     </div>
     <!-- /footer -->
+
+
+    <script>
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const email = document.querySelector("input[name='Email']").value;
+            const confirm = document.querySelector("input[name='ConfirmEmail']").value;
+
+            if (email !== confirm) {
+                e.preventDefault(); // prevent form submission
+                alert("Emails do not match!");
+            }
+
+            const pwd = document.querySelector("input[name='Password']").value;
+            const cpwd = document.querySelector("input[name='ConfirmPassword']").value;
+
+            if (pwd !== cpwd) {
+                e.preventDefault();
+                alert("Passwords do not match!");
+            }
+        });
+    </script>
 </body>
 </html>
