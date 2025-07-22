@@ -16,65 +16,136 @@
 @if (loggedinUser.IsAdmin == true)
 {
     ViewBag.Title = "Admin Dashboard";
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Welcome Admin</h2>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
-    <div class="row text-white">
-        <div class="col-md-4">
-            <div class="p-4 mb-4" style="background-color:#1bafd0; border-radius: 15px;">
-                <h5 class="text-center">Total Users</h5>
-                <h2 class="text-center">@ViewBag.UserCount</h2>
+    <div class="container mt-5">
+        <br>
+
+        @{
+            var hour = DateTime.Now.Hour;
+            string greeting;
+
+            if (hour < 12)
+            {
+                greeting = "Good Morning";
+            }
+            else if (hour < 17)
+            {
+                greeting = "Good Afternoon";
+            }
+            else
+            {
+                greeting = "Good Evening";
+            }
+        }
+        <h2 class="text-center mb-4">@greeting, Admin! 👋</h2>
+        <br>
+
+        <div class="row text-white">
+
+            <!-- Total Users -->
+            <div class="col-md-4">
+                <div class="p-4 mb-4 shadow-lg" style="background: linear-gradient(135deg, #1bafd0, #0d8aad); border-radius: 20px;">
+                    <div class="text-center mb-2">
+                        <br>
+                        <i class="fas fa-users fa-2x mb-2 text-white"></i>
+                        <br>
+                        <h5 class="fw-bold">Total Users</h5>
+                    </div>
+                    <h2 class="text-center fw-bold display-4">@ViewBag.UserCount</h2>
+                    <br>
+                </div>
             </div>
+
+            <!-- Total Audit Logs -->
+            <div class="col-md-4">
+                <div class="p-4 mb-4 shadow-lg" style="background: linear-gradient(135deg, #3be8b0, #14c29c); border-radius: 20px;">
+                    <div class="text-center mb-2">
+                        <br>
+                        <i class="fas fa-clipboard-list fa-2x mb-2 text-white"></i>
+                        <br>
+                        <h5 class="fw-bold">Total Audit Logs</h5>
+                    </div>
+                    <h2 class="text-center fw-bold display-4">@ViewBag.AuditLogCount</h2>
+                    <br>
+                </div>
+            </div>
+
+            <!-- User-Specific Audit Logs -->
+            <div class="col-md-4">
+                <div class="p-4 mb-4 shadow-lg" style="background: linear-gradient(135deg, #fd636b, #d1444c); border-radius: 20px;">
+                    <div class="text-center mb-2">
+                        <br>
+                        <i class="fas fa-user-shield fa-2x mb-2 text-white"></i>
+                        <br>
+                        <h5 class="fw-bold">Your Audit Actions</h5>
+                    </div>
+                    <h2 class="text-center fw-bold display-4">@(@ViewBag.AuditLogCountByUser ?? 0)</h2>
+                    <br>
+                </div>
+            </div>
+
         </div>
 
-        <div class="col-md-4">
-            <div class="p-4 mb-4" style="background-color:#3be8b0; border-radius: 15px;">
-                <h5 class="text-center">Total Audit Logs</h5>
-                <h2 class="text-center">@ViewBag.AuditLogCount</h2>
-            </div>
-        </div>
+        <br>
+        <br>
+        <div class="row text-white">
 
-        <div class="col-md-4">
-            <div class="p-4 mb-4" style="background-color:#fd636b; border-radius: 15px;">
-                <h5 class="text-center">Your Audit Actions</h5>
-                <h2 class="text-center">@(@ViewBag.AuditLogCountByUser ?? 0)</h2>
+            <!-- Total Dog Breeds -->
+            <div class="col-md-4">
+                <div class="p-4 mb-4 shadow-lg" style="background: linear-gradient(135deg, #e83b6e, #c32658); border-radius: 20px;">
+                    <div class="text-center mb-2">
+                        <br>
+                        <i class="fas fa-dog fa-2x mb-2 text-white"></i>
+                        <br>
+                        <h5 class="fw-bold">Total Dog Breeds</h5>
+                    </div>
+                    <h2 class="text-center fw-bold display-4">@ViewBag.DogBreedCount</h2>
+                    <br>
+                </div>
+            </div>
+
+            <!-- Total Sub-Breeds -->
+            <div class="col-md-4">
+                <div class="p-4 mb-4 shadow-lg" style="background: linear-gradient(135deg, #3b8de8, #1f6dd4); border-radius: 20px;">
+                    <div class="text-center mb-2">
+                        <br>
+                        <i class="fas fa-paw fa-2x mb-2 text-white"></i>
+                        <br>
+                        <h5 class="fw-bold">Total Sub-Breeds</h5>
+                    </div>
+                    <h2 class="text-center fw-bold display-4">@ViewBag.SubBreedCount</h2>
+                    <br>
+                </div>
+            </div>
+
+            <!-- Your Contributions -->
+            <div class="col-md-4">
+                <div class="p-4 mb-4 shadow-lg" style="background: linear-gradient(135deg, #ff9a59, #f36b1c); border-radius: 20px;">
+                    <div class="text-center mb-2">
+                        <br>
+                        <i class="fas fa-user-edit fa-2x mb-2 text-white"></i>
+                        <br>
+                        <h5 class="fw-bold">Your Contributions</h5>
+                    </div>
+                    <h2 class="text-center fw-bold display-4">@(@ViewBag.DogBreedCountByUser ?? 0)</h2>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <br>
+
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <canvas id="BreedChart"></canvas>
+            </div>
+            <div class="col-md-6">
+                <canvas id="auditChart"></canvas>
             </div>
         </div>
     </div>
-    <br>
-    <br>
-    <div class="row text-white">
-        <div class="col-md-4">
-            <div class="p-4 mb-4" style="background-color:#e83b6e; border-radius: 15px;">
-                <h5 class="text-center">Total Dog Breeds</h5>
-                <h2 class="text-center">@ViewBag.DogBreedCount</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="p-4 mb-4" style="background-color:#3b8de8; border-radius: 15px;">
-                <h5 class="text-center">Total Sub-Breeds</h5>
-                <h2 class="text-center">@ViewBag.SubBreedCount</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="p-4 mb-4" style="background-color:#ff9a59; border-radius: 15px;">
-                <h5 class="text-center">Your Contributions</h5>
-                <h2 class="text-center">@(@ViewBag.DogBreedCountByUser ?? 0)</h2>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-5">
-        <div class="col-md-6">
-            <canvas id="BreedChart"></canvas>
-        </div>
-        <div class="col-md-6">
-            <canvas id="auditChart"></canvas>
-        </div>
-    </div>
-</div>
 
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -145,29 +216,77 @@
 @if (loggedinUser.IsAdmin == false)
 {
     ViewBag.Title = "User Dashboard";
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Welcome, @User.Identity.Name!</h2>
+        <br>
+        @{
+            var hour = DateTime.Now.Hour;
+            string greeting;
+
+            if (hour < 12)
+            {
+                greeting = "Good Morning";
+            }
+            else if (hour < 17)
+            {
+                greeting = "Good Afternoon";
+            }
+            else
+            {
+                greeting = "Good Evening";
+            }
+        }
+        <h2 class="text-center mb-4">@greeting, @User.Identity.Name! 👋</h2>
+        <br>
 
         <div class="row text-white">
+
+            <!-- Total Dog Breeds -->
             <div class="col-md-4">
-                <div class="p-4 mb-4" style="background-color:#3be8b0; border-radius: 15px;">
-                    <h5 class="text-center">Total Dog Breeds</h5>
-                    <h2 class="text-center">@ViewBag.DogBreedCount</h2>
+                <div class="p-4 mb-4 shadow-lg" style="background: linear-gradient(135deg, #e83b6e, #c32658); border-radius: 20px;">
+                    <div class="text-center mb-2">
+                        <br>
+                        <i class="fas fa-dog fa-2x mb-2 text-white"></i>
+                        <br>
+                        <h5 class="fw-bold">Total Dog Breeds</h5>
+                    </div>
+                    <h2 class="text-center fw-bold display-4">@ViewBag.DogBreedCount</h2>
+                    <br>
                 </div>
             </div>
+
+            <!-- Total Sub-Breeds -->
             <div class="col-md-4">
-                <div class="p-4 mb-4" style="background-color:#f4a261; border-radius: 15px;">
-                    <h5 class="text-center">Total Sub-breeds</h5>
-                    <h2 class="text-center">@ViewBag.SubBreedCount</h2>
+                <div class="p-4 mb-4 shadow-lg" style="background: linear-gradient(135deg, #3b8de8, #1f6dd4); border-radius: 20px;">
+                    <div class="text-center mb-2">
+                        <br>
+                        <i class="fas fa-paw fa-2x mb-2 text-white"></i>
+                        <br>
+                        <h5 class="fw-bold">Total Sub-Breeds</h5>
+                    </div>
+                    <h2 class="text-center fw-bold display-4">@ViewBag.SubBreedCount</h2>
+                    <br>
                 </div>
             </div>
+
+            <!-- Your Contributions -->
             <div class="col-md-4">
-                <div class="p-4 mb-4" style="background-color:#4f81c7; border-radius: 15px;">
-                    <h5 class="text-center">Your Contributions</h5>
-                    <h2 class="text-center">@(@ViewBag.DogBreedCountByUser ?? 0)</h2>
+                <div class="p-4 mb-4 shadow-lg" style="background: linear-gradient(135deg, #ff9a59, #f36b1c); border-radius: 20px;">
+                    <div class="text-center mb-2">
+                        <br>
+                        <i class="fas fa-user-edit fa-2x mb-2 text-white"></i>
+                        <br>
+                        <h5 class="fw-bold">Your Contributions</h5>
+                    </div>
+                    <h2 class="text-center fw-bold display-4">@(@ViewBag.DogBreedCountByUser ?? 0)</h2>
+                    <br>
                 </div>
             </div>
+
         </div>
+        <br>
+        <br>
 
         <div class="row mt-5">
             <div class="col-md-6">

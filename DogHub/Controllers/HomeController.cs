@@ -19,6 +19,19 @@ namespace DogHub.Controllers
 
             return View();
         }
+        public ActionResult Detail()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
+
+        public ActionResult SearchDog()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
 
         public ActionResult Contact()
         {

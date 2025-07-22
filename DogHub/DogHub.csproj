@@ -3315,6 +3315,8 @@
     <Content Include="Content\Home\js\particles.js" />
     <Content Include="Content\Home\js\validation.js" />
     <Content Include="Content\Home\js\wow.min.js" />
+    <Content Include="Content\Images\doghub-logo.png" />
+    <Content Include="Content\Images\doghublogo.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -3740,6 +3742,8 @@
     <Content Include="Views\Admin\AddDogBreed.cshtml" />
     <Content Include="Views\Admin\ViewDogBreed.cshtml" />
     <Content Include="Views\Admin\ViewAuditLog.cshtml" />
+    <Content Include="Views\Home\Detail.cshtml" />
+    <Content Include="Views\Home\SearchDog.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
