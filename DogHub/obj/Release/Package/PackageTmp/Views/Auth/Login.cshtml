@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "DogHub Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DogHub Login</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/assets/images/Favicons/D-Fav.jpg">
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+    <!-- Core JS files -->
+    <script type="text/javascript" src="~/Content/assets/js/plugins/loaders/pace.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/core/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/core/libraries/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/loaders/blockui.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/ui/nicescroll.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/ui/drilldown.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/ui/fab.min.js"></script>
+    <!-- /core JS files -->
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="~/Content/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/pages/login.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/ui/ripple.min.js"></script>
+    <!-- /theme JS files -->
+
+</head>
+
+<body class="login-container  bg-slate-800  pace-done">
+
+    <div class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <ul class="nav navbar-nav pull-right visible-xs-block">
+                <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-grid3"></i></a></li>
+            </ul>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-mobile">
+        </div>
+    </div>
+
+    <br />
+    <br />
+
+    <!-- Page container -->
+    <div class="page-container">
+
+        <!-- Page content -->
+        <div class="page-content">
+
+            <!-- Main content -->
+            <div class="content-wrapper">
+                <!-- Advanced login -->
+                <form action="@Url.Action("PostLogin", "Auth")" method="post" class="login-form">
+                    <div class="panel panel-body">
+
+                        <div style="color: @ViewBag.Color">
+                            @ViewBag.Message
+                        </div>
+
+                        <div class="text-center">
+                            <h5 class="content-group-lg">Login To Your Account <small class="display-block">Enter your credentials</small></h5>
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="email" class="form-control" placeholder="Enter Email" required name="Email" id="Email">
+                            <div class="form-control-feedback">
+                                <i class="icon-mail5 text-muted"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="password" class="form-control" placeholder="Password" required name="Password" id="Password">
+                            <div class="form-control-feedback">
+                                <i class="icon-lock2 text-muted"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn bg-blue-400 btn-block">Login <i class="icon-arrow-right14 position-right"></i></button>
+                        </div>
+
+                        <a class="pull-right" href="@Url.Action("ForgotPassword", "Auth")">Forgot Password?</a>
+                        <br />
+
+                        <div class="content-divider text-muted form-group"><span>Don't have an account?</span></div>
+                        <a href="@Url.Action("Register", "Auth")" class="btn bg-pink btn-block content-group">New Registration</a>
+                </form>
+                <br />
+                <div class="content-divider text-muted form-group"><span>or sign in with</span></div>
+                <ul class="list-inline form-group list-inline-condensed text-center">
+                    <li>
+                        <form action="@Url.Action("ExternalLogin", "Auth", new { ReturnUrl = "/" })" method="post" id="googleLoginForm" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" name="provider" value="Google" class="btn border-pink-300 text-pink-300 btn-flat btn-icon btn-rounded">
+                                <i class="icon-google"></i>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <!-- /advanced login -->
+        </div>
+        <!-- /main content -->
+    </div>
+    <!-- /page content -->
+    </div>
+    <!-- /page container -->
+    <!-- footer -->
+    <div class="navbar navbar-default navbar-fixed-bottom footer">
+        <ul class="nav navbar-nav visible-xs-block">
+            <li><a class="text-center collapsed" data-toggle="collapse" data-target="#footer"><i class="icon-circle-up2"></i></a></li>
+        </ul>
+
+        <div class="navbar-collapse collapse" id="footer">
+            <div class="navbar-text">
+                @DateTime.Now.ToString("Y"). <a href="#" class="navbar-link">Dog Hub</a> by <a href="#" class="navbar-link" target="_blank">Arqum</a>
+            </div>
+
+            <div class="navbar-right">
+                <ul class="nav navbar-nav"></ul>
+            </div>
+        </div>
+    </div>
+    <!-- /footer -->
+</body>
+</html>

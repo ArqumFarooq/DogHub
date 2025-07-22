@@ -107,6 +107,7 @@ namespace DogHub.Controllers
             {
                 ViewBag.UserCount = new UserBL().GetActiveUsers(de).Where(x => x.IsAdmin != true && (x.IsActive != false || x.IsActive != null)).Count();
                 ViewBag.DogBreedCount = new DogBreedBL().GetAllDogBreeds(de).Where(x => x.IsDeleted == false || x.IsDeleted == null).Count();
+                ViewBag.SubBreedCount = new DogBreedBL().GetAllDogBreeds(de).Where(x => (x.IsDeleted == false || x.IsDeleted == null) && x.ParentBreedId != null).Count();
                 ViewBag.DogBreedCountByUser = new DogBreedBL().GetAllDogBreeds(de).Where(x => (x.IsDeleted == false || x.IsDeleted == null) && x.SysCreatedID == loggedinUser.PK_UserId).Count();
                 ViewBag.AuditLogCount = new AuditLogBL().GetAllAuditLogs(de).Count();
                 ViewBag.AuditLogCountByUser = new AuditLogBL().GetAllAuditLogs(de).Where(x => x.SysCreatedID == loggedinUser.PK_UserId).Count();
@@ -118,6 +119,7 @@ namespace DogHub.Controllers
             else
             {
                 ViewBag.DogBreedCount = new DogBreedBL().GetAllDogBreeds(de).Where(x => x.IsDeleted == false || x.IsDeleted == null).Count();
+                ViewBag.SubBreedCount = new DogBreedBL().GetAllDogBreeds(de).Where(x => (x.IsDeleted == false || x.IsDeleted == null) && x.ParentBreedId != null).Count();
                 ViewBag.DogBreedCountByUser = new DogBreedBL().GetAllDogBreeds(de).Where(x => (x.IsDeleted == false || x.IsDeleted == null) && x.SysCreatedID == loggedinUser.PK_UserId).Count();
                 ViewBag.Message = msg;
                 ViewBag.Color = color;

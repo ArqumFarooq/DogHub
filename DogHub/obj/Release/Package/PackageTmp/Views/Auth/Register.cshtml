@@ -1,0 +1,194 @@
+﻿@model DogHub.Models.User
+
+@{
+    ViewBag.Title = "DogHub Register";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DogHub Registration</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/assets/images/Favicons/D-Fav.jpg">
+    
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+
+    <!-- Core JS files -->
+    <script type="text/javascript" src="~/Content/assets/js/plugins/loaders/pace.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/core/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/core/libraries/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/loaders/blockui.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/ui/nicescroll.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/ui/drilldown.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/ui/fab.min.js"></script>
+    <!-- /core JS files -->
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="~/Content/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/pages/login.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/plugins/ui/ripple.min.js"></script>
+    <!-- /theme JS files -->
+</head>
+
+<body class="navbar-bottom login-container bg-slate-800">
+
+    <!-- Main navbar -->
+    <div class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <ul class="nav navbar-nav pull-right visible-xs-block">
+                <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-grid3"></i></a></li>
+            </ul>
+        </div>
+
+        <div class="navbar-collapse collapse" id="navbar-mobile">
+        </div>
+    </div>
+    <!-- /main navbar -->
+    <!-- Page container -->
+    <div class="page-container">
+
+        <!-- Page content -->
+        <div class="page-content">
+
+            <!-- Main content -->
+            <div class="content-wrapper">
+
+                <!-- Registration form -->
+                <form action="@Url.Action("PostRegister","Auth")" method="post" class="registration-form">
+                    <div class="row">
+                        <div class="col-lg-6 col-lg-offset-3">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <div style="color:@ViewBag.Color">
+                                        @ViewBag.Message
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="icon-object border-success text-success"><i class="icon-plus3"></i></div>
+                                        <h5 class="content-group-lg">Create account <small class="display-block">All fields are required</small></h5>
+                                    </div>
+
+                                    <div class="form-group has-feedback">
+                                        <input type="text" class="form-control" placeholder="User Name" name="UserName" required="">
+                                        <div class="form-control-feedback">
+                                            <i class="icon-user-plus text-muted"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group has-feedback">
+                                                <input type="email" class="form-control" placeholder="Your Email" name="Email" required="">
+                                                <div class="form-control-feedback">
+                                                    <i class="icon-mention text-muted"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group has-feedback">
+                                                <input type="email" class="form-control" placeholder="Confirm Email" name="ConfirmEmail" required="">
+                                                <div class="form-control-feedback">
+                                                    <i class="icon-mention text-muted"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group has-feedback">
+                                                <input type="password" class="form-control"
+                                                       placeholder="Password must be at least 8 characters long and include a number, an uppercase and a lowercase letter."
+                                                       name="Password"
+                                                       required
+                                                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
+                                                       title="Password must be at least 8 characters long and include a number, an uppercase and a lowercase letter.">
+                                                <div class="form-control-feedback">
+                                                    <i class="icon-user-lock text-muted"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group has-feedback">
+                                                <input type="password" class="form-control"
+                                                       placeholder="Confirm Password must be at least 8 characters long and include a number, an uppercase and a lowercase letter."
+                                                       name="ConfirmPassword"
+                                                       required>
+                                                <div class="form-control-feedback">
+                                                    <i class="icon-user-lock text-muted"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="clearfix">
+                                        <a href="@Url.Action("Login", "Auth")" class="btn btn-default pull-left"><i class="icon-arrow-left13 position-left"></i> Back to login form</a>
+                                        <button type="submit" class="btn bg-pink-400 btn-labeled btn-labeled-right pull-right"><b><i class="icon-plus3"></i></b> Create account</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- /registration form -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+    <!-- /page container -->
+    <!-- Footer -->
+    <div class="navbar navbar-default navbar-fixed-bottom footer">
+        <ul class="nav navbar-nav visible-xs-block">
+            <li><a class="text-center collapsed" data-toggle="collapse" data-target="#footer"><i class="icon-circle-up2"></i></a></li>
+        </ul>
+
+        <div class="navbar-collapse collapse" id="footer">
+            <div class="navbar-text">
+                @DateTime.Now.ToString("Y"). <a href="#" class="navbar-link">Dog Hub</a> by <a href="#" class="navbar-link" target="_blank">Arqum</a>
+            </div>
+            <div class="navbar-right">
+                <ul class="nav navbar-nav"></ul>
+            </div>
+        </div>
+    </div>
+    <!-- /footer -->
+
+
+    <script>
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const email = document.querySelector("input[name='Email']").value;
+            const confirm = document.querySelector("input[name='ConfirmEmail']").value;
+
+            if (email !== confirm) {
+                e.preventDefault(); // prevent form submission
+                alert("Emails do not match!");
+            }
+
+            const pwd = document.querySelector("input[name='Password']").value;
+            const cpwd = document.querySelector("input[name='ConfirmPassword']").value;
+
+            if (pwd !== cpwd) {
+                e.preventDefault();
+                alert("Passwords do not match!");
+            }
+        });
+    </script>
+</body>
+</html>

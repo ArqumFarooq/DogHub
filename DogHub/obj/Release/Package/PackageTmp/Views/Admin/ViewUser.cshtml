@@ -1,0 +1,276 @@
+﻿@using DogHub.HelpingClasses
+@using DogHub.Models
+
+@{
+    ViewBag.Title = "Users Record";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<img id="loadImg" src='../Content/assets/images/loading.gif' width='100' style="position:fixed; margin-top:20%; margin-left:35%; z-index:111; display:none" />
+
+<div class="modal" id="deleteModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Do You Want to Delete?</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer text-center">
+                <a class="btn btn-danger" id="deleteId">Yes</a>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-center text-bold">Update User</h5>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="@Url.Action("PostUpdateUser","Admin")" method="post">
+                    <input type="hidden" name="PK_UserId" id="updateId" />
+                    <div class="form-group">
+                        <label for="modal-name" class="col-form-label text-bold">User Name</label>
+                        <input type="text" class="form-control" placeholder="Your User Name" id="updateUserName" name="UserName">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-name" class="col-form-label text-bold">Email:</label>
+                        <input type="email" class="form-control" placeholder="Enter Valid Email Here" id="updateEmail" name="Email">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" value="submit" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Link with search datatable*@
+<div class="row m-5" style=" border:2px solid #424ef4; border-radius:10px; color:white;">
+    <div class="col-xs-12" style="background-color:#0005A7; border-radius:10px;">
+        <div class="row">
+
+            <div class="col-md-2 col-lg-4" style="padding: 20px;padding-top:20px;">
+                <div class="form-group">
+                    <label><strong>User Name:</strong></label>
+                    <input type="text" placeholder="Search User Name Here" class="form-control" id="searchUserName" style="background-color:white">
+                </div>
+            </div>
+
+            <div class="col-md-2 col-lg-4" style="padding: 20px;padding-top:20px;">
+                <div class="form-group">
+                    <label><strong>Email:</strong></label>
+                    <input type="text" placeholder="Search User by Email Here" class="form-control" id="searchEmail" style="background-color:white">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div style="padding: 20px;">
+                <div class="form-group">
+                    <button onclick="SearchUser()" class="btn btn-primary pull-right">Search</button><br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<div class="clearfix">
+    <h3 class="text-center">
+        <u>Users List</u>
+    </h3>
+</div>
+<br />
+
+<div style="min-height:700px">
+    <div style="font-weight:bold; color:@ViewBag.Color ; margin-left:10px;" id="alertMsg">
+        @ViewBag.Message
+    </div>
+    <div class="datatable-scroll table-bordered p-10">
+        <table class="table no-footer table-responsive table-striped" id="userTable">
+            <thead class="bg-blue-400">
+                <tr>
+                    <th class="text-bold">
+                        Name
+                    </th>
+                    <th class="text-bold">
+                        Email
+                    </th>
+                    <th class="text-bold text-center">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+
+    $('#userTable').DataTable(
+    {
+        "ajax":
+        {
+            "url": '@Url.Action("GetUserList", "Admin")',
+            "type": "POST",
+            "datatype": "json",
+        },
+        'columns':
+        [
+                { "data": "UserName", "name": "UserName" },
+                { "data": "Email", "name": "Email" },
+                { "data": null }
+        ],
+        'columnDefs':
+        [
+            {
+                "targets": 0,
+                'className': 'col-lg-1',
+                "orderable": true,
+                "render": function (data, type, full, meta) {
+                    return full.UserName ;
+                }
+            },
+            {
+                "targets": 1,
+                'className': 'col-lg-1',
+                "orderable": true,
+                "render": function (data, type, full, meta) {
+                    return  full.Email ;
+                }
+            },
+            {
+                "targets": 2,
+                'className': 'col-lg-1',
+                "orderable": false,
+                "render": function (data, type, full, meta) {
+                        return '<ul class="icons-list text-center"> <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a> <ul class="dropdown-menu dropdown-menu-right"> ' +
+                            '<li><a class="text-onfo" onclick="UpdateUser(' + full.PK_UserId + ', 1)"><i class="icon-pencil"></i> Update User</a></li>' +
+                            '<li><a class="text-danger"onclick="deleteFunction(' + full.PK_UserId + ')" data-toggle="modal" data-target="#deleteModal"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                            '</ul></li></ul>';
+                }
+            }
+
+        ],
+        "serverSide": "true",
+        "processing": "true",
+        "language":
+        {
+            "processing": "<img src='../Content/assets/images/loading.gif' width='100'/>",
+            "search": "<span>Search :</span> _INPUT_",
+            "searchPlaceholder": "Filter Values",
+            "lengthMenu": "<span>Show :</span> _MENU_",
+            "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+        },
+    });
+
+    function SearchUser()
+    {
+        $('#userTable').DataTable().clear();
+        $('#userTable').DataTable().destroy();
+
+        var UserName = document.getElementById("searchUserName").value;
+        var Email = document.getElementById("searchEmail").value;
+
+        $('#userTable').DataTable(
+        {
+            "ajax":
+            {
+                "url": '@Url.Action("GetUserList", "Admin")',
+                "type": "POST",
+                "datatype": "json",
+                "data": { UserName: UserName, Email: Email}
+                },
+            'columns':
+            [
+                    { "data": "UserName", "name": "UserName" },
+                    { "data": "Email", "name": "Email" },
+                    { "data": null }
+            ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            'className': 'col-lg-1',
+                            "orderable": true,
+                            "render": function (data, type, full, meta) {
+                                return full.UserName;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': 'col-lg-1',
+                            "orderable": true,
+                            "render": function (data, type, full, meta) {
+                                return full.Email;
+                            }
+                        },
+                        {
+                            "targets": 2,
+                            'className': 'col-lg-1',
+                            "orderable": false,
+                            "render": function (data, type, full, meta) {
+                                    return '<ul class="icons-list text-center"> <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-menu9"></i> </a> <ul class="dropdown-menu dropdown-menu-right"> ' +
+                                        '<li><a class="text-onfo" onclick="UpdateUser(' + full.PK_UserId + ', 1)"><i class="icon-pencil"></i> Update User</a></li>' +
+                                        '<li><a class="text-danger"onclick="deleteFunction(' + full.PK_UserId + ')" data-toggle="modal" data-target="#deleteModal"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                        '</ul></li></ul>';
+
+                            }
+                        }
+
+                    ],
+            "serverSide": "true",
+            "processing": "true",
+            "language":
+            {
+                "processing": "<img src='../Content/assets/images/loading.gif' width='100'/>",
+                "search": "<span>Search :</span> _INPUT_",
+                "searchPlaceholder": "Filter Values",
+                "lengthMenu": "<span>Show :</span> _MENU_",
+                "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+            },
+        });
+    }
+
+    function UpdateUser(id)
+    {
+        $('#loadImg').show();
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/GetUserById",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function (response)
+            {
+                $('#updateId').val(response.PK_UserId);
+                $('#updateUserName').val(response.UserName);
+                $('#updateEmail').val(response.Email);
+                $('#updateModal').modal('show');
+                $('#loadImg').hide();
+            },
+            error: function () {
+                alert("ajax Failed");
+            }
+        });
+    }
+
+    function deleteFunction(id)
+    {
+        var a = document.getElementById('deleteId');
+        a.href = "../Admin/DeleteUser?id=" + id + "";
+    }
+
+</script>
