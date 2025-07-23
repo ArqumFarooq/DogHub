@@ -1,17 +1,22 @@
-﻿
+﻿@using DogHub.BL
+@using DogHub.Models
 @{
     ViewBag.Title = "DogHub - Home Page";
     Layout = null;
 }
+@{
+    DogHubEntities de = new DogHubEntities();
+    var dogBreedasc = new DogBreedBL().GetAllDogBreeds(de).Where(x => (x.IsDeleted == false || x.IsDeleted == null) && (x.ImageUrl != null && x.DogName != null && x.Origin != null && x.LifeSpan != null)).OrderBy(x => x.PK_DogBreedId).ToList();
+    var dogBreeddesc = new DogBreedBL().GetAllDogBreeds(de).Where(x => (x.IsDeleted == false || x.IsDeleted == null) && (x.ImageUrl != null && x.DogName != null && x.Origin != null && x.LifeSpan != null)).OrderByDescending(x => x.PK_DogBreedId).ToList();
+}
 <!DOCTYPE html>
-<html lang="zxx">
+<html>
 
 <head>
-    <title>DogHub - Home Page</title>
-    <link rel="icon" href="~/Content/Home/images/icon-red.png" type="image/gif" sizes="16x16">
+    <title>DogHub - Home</title>
+    <link rel="icon" href="~/Content/assets/images/Favicons/D-Fav.jpg" type="image/gif" sizes="16x16">
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta content="Gigaland - NFT Marketplace Website Template" name="description" />
     <meta content="" name="keywords" />
     <meta content="" name="author" />
 
@@ -30,13 +35,30 @@
     <link href="~/Content/Home/css/de-grey.css" rel="stylesheet" type="text/css" />
     <!-- color scheme -->
 
+    <style>
+        .doghub-logo {
+            width: 35px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #212428;
+            font-size: 40px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            color: red;
+            border: 1px solid #212428;
+            image-rendering: pixelated;
+        }
+    </style>
+
     <link id="colors" href="~/Content/Home/css/colors/scheme-04.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/Home/css/coloring.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="dark-scheme de-grey">
     <div id="wrapper">
-        
+
         <!-- header begin -->
         <header class="transparent scroll-dark">
             <div class="container">
@@ -47,32 +69,30 @@
                                 <div class="de-flex-col">
                                     <!-- logo begin -->
                                     <div id="logo">
-                                        <a href="03_grey-index.html">
-                                            <img alt="" src="~/Content/Home/images/logo-3.png" />
-                                        </a>
+                                        <div class="doghub-logo">DogHub</div>
                                     </div>
                                     <!-- logo close -->
                                 </div>
-                                @*<div class="de-flex-col">
-                                    <input id="quick_search" class="xs-hide style-2" name="quick_search" placeholder="search item here..." type="text" />
-                                </div>*@
                             </div>
                             <div class="de-flex-col header-col-mid">
                                 <!-- mainmenu begin -->
                                 <ul id="mainmenu">
                                     <li>
-                                        <a href="03_grey-index.html">Home<span></span></a>
+                                        <a href="@Url.Action("Index", "Home")">Home<span></span></a>
+                                    </li>
+                                    @*<li>
+                                            <a href="@Url.Action("SearchDog", "Home")">Explore<span></span></a>
+                                        </li>*@
+                                    <li>
+                                        <a href="@Url.Action("Detail", "Home")">Detail<span></span></a>
                                     </li>
                                     <li>
-                                        <a href="03_grey-explore.html">Explore<span></span></a>
-                                    </li>
-                                    <li>
-                                        <a href="03_grey-activity.html">Activity<span></span></a>
+                                        <a href="@Url.Action("DashBoard", "Admin")">DashBoard<span></span></a>
                                     </li>
                                 </ul>
                                 <!-- mainmenu close -->
                                 <div class="menu_side_area">
-                                    <a href="@Url.Action("Logout","Auth")" class="btn-main"><i class="icon_wallet_alt"></i><span>Logout</span></a>
+                                    <a href="@Url.Action("Logout", "Auth")" class="btn-main"><i class="icon_wallet_alt"></i><span>Logout</span></a>
                                     <span id="menu-btn"></span>
                                 </div>
                             </div>
@@ -82,7 +102,6 @@
             </div>
         </header>
         <!-- header close -->
-      
         <!-- content begin -->
         <div class="no-bottom no-top" id="content">
             <div id="top"></div>
@@ -90,65 +109,25 @@
             <section id="section-hero" class="no-bottom" aria-label="section">
                 <div class="d-carousel">
                     <div id="item-carousel-big" class="owl-carousel wow fadeIn">
-                        <div class="nft_pic">
-                            <a href="03_grey-item-details.html">
-                                <span class="nft_pic_info">
-                                    <span class="nft_pic_title">Red Ocean</span>
-                                    <span class="nft_pic_by">Monica Lucas</span>
-                                </span>
-                            </a>
-                            <div class="nft_pic_wrap">
-                                <img src="~/Content/Home/images/carousel/crs-4.jpg" class="lazy img-fluid" alt="">
-                            </div>
-                        </div>
-
-                        <div class="nft_pic">
-                            <a href="03_grey-item-details.html">
-                                <span class="nft_pic_info">
-                                    <span class="nft_pic_title">Live Arts</span>
-                                    <span class="nft_pic_by">Nicholas Daniels</span>
-                                </span>
-                            </a>
-                            <div class="nft_pic_wrap">
-                                <img src="~/Content/Home/images/carousel/crs-5.jpg" class="lazy img-fluid" alt="">
-                            </div>
-                        </div>
-
-                        <div class="nft_pic">
-                            <a href="03_grey-item-details.html">
-                                <span class="nft_pic_info">
-                                    <span class="nft_pic_title">Glass Cube</span>
-                                    <span class="nft_pic_by">Mamie Barnett</span>
-                                </span>
-                            </a>
-                            <div class="nft_pic_wrap">
-                                <img src="~/Content/Home/images/carousel/crs-1.jpg" class="lazy img-fluid" alt="">
-                            </div>
-                        </div>
-
-                        <div class="nft_pic">
-                            <a href="03_grey-item-details.html">
-                                <span class="nft_pic_info">
-                                    <span class="nft_pic_title">Loop Donut</span>
-                                    <span class="nft_pic_by">Lori Hart</span>
-                                </span>
-                            </a>
-                            <div class="nft_pic_wrap">
-                                <img src="~/Content/Home/images/items/anim-5.webp" class="lazy img-fluid" alt="">
-                            </div>
-                        </div>
-
-                        <div class="nft_pic">
-                            <a href="03_grey-item-details.html">
-                                <span class="nft_pic_info">
-                                    <span class="nft_pic_title">I Believe I Can Fly</span>
-                                    <span class="nft_pic_by">Fred Ryan</span>
-                                </span>
-                            </a>
-                            <div class="nft_pic_wrap">
-                                <img src="~/Content/Home/images/items/anim-8.webp" class="lazy img-fluid" alt="">
-                            </div>
-                        </div>
+                        @{
+                            int counter = 0;
+                            foreach (var dlist in dogBreedasc)
+                            {
+                                if (counter >= 5) { break; }
+                                <div class="nft_pic">
+                                    <a href="@Url.Action("Detail", "Home", new {AuthorId = counter + 1, Heart = 20, DogId = dlist.PK_DogBreedId })">
+                                        <span class="nft_pic_info">
+                                            <span class="nft_pic_title">@dlist.DogName</span>
+                                            <span class="nft_pic_by">@dlist.Origin | @dlist.LifeSpan</span>
+                                        </span>
+                                    </a>
+                                    <div class="nft_pic_wrap">
+                                        <img src="@dlist.ImageUrl" class="lazy img-fluid" alt="@dlist.DogName" style="width:512px; height:393px; object-fit:cover;">
+                                    </div>
+                                </div>
+                                counter++;
+                            }
+                        }
                     </div>
                     <div class="d-arrow-left"><i class="fa fa-angle-left"></i></div>
                     <div class="d-arrow-right"><i class="fa fa-angle-right"></i></div>
@@ -157,258 +136,59 @@
 
             <section id="section-collections" class="pt30 pb30">
                 <div class="container">
-
                     <div class="spacer-single"></div>
-
                     <div class="row wow fadeIn">
                         <div class="col-lg-12">
-                            <h2 class="style-2">New Items</h2>
+                            <h2 class="style-2">Top Dog Breeds</h2>
                         </div>
+                        @{
+                            int count = 0;
+                            Random rand = new Random(); // Random generator
 
-                        <!-- nft item begin -->
-                        <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                            <div class="nft__item style-2">
-                                <div class="de_countdown" data-year="2021" data-month="9" data-day="20" data-hour="8"></div>
-                                <div class="author_list_pp">
-                                    <a href="03_grey-author.html">
-                                        <img class="lazy" src="~/Content/Home/images/author/author-1.jpg" alt="">
-                                        <i class="fa fa-check"></i>
-                                    </a>
-                                </div>
-                                <div class="nft__item_wrap">
-                                    <a href="03_grey-item-details.html">
-                                        <img src="~/Content/Home/images/items-alt/static-1.jpg" class="lazy nft__item_preview" alt="">
-                                    </a>
-                                </div>
-                                <div class="nft__item_info">
-                                    <a href="03_grey-item-details.html">
-                                        <h4>Sunny Day</h4>
-                                    </a>
-                                    <div class="nft__item_price">
-                                        0.08 ETH<span>1/20</span>
-                                    </div>
-                                    <div class="nft__item_action">
-                                        <a href="#">Place a bid</a>
-                                    </div>
-                                    <div class="nft__item_like">
-                                        <i class="fa fa-heart"></i><span>50</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- nft item begin -->
-                        <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                            <div class="nft__item style-2">
-                                <div class="author_list_pp">
-                                    <a href="03_grey-author.html">
-                                        <img class="lazy" src="~/Content/Home/images/author/author-10.jpg" alt="">
-                                        <i class="fa fa-check"></i>
-                                    </a>
-                                </div>
-                                <div class="nft__item_wrap">
-                                    <a href="03_grey-item-details.html">
-                                        <img src="~/Content/Home/images/items-alt/static-2.jpg" class="lazy nft__item_preview" alt="">
-                                    </a>
-                                </div>
-                                <div class="nft__item_info">
-                                    <a href="03_grey-item-details.html">
-                                        <h4>Blue Planet</h4>
-                                    </a>
-                                    <div class="nft__item_price">
-                                        0.06 ETH<span>1/22</span>
-                                    </div>
-                                    <div class="nft__item_action">
-                                        <a href="#">Place a bid</a>
-                                    </div>
-                                    <div class="nft__item_like">
-                                        <i class="fa fa-heart"></i><span>80</span>
+                            foreach (var dlist in dogBreeddesc)
+                            {
+                                if (count >= 8) { break; }
+                                int hearts = rand.Next(1, 100); // Generate random hearts from 1 to 99
+                                string authorImg = $"/Content/Home/images/author/author-{count + 1}.jpg";
+
+                                <!-- nft item begin -->
+                                <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="nft__item style-2">
+                                        <div class="author_list_pp">
+                                            <a href="#">
+                                                <img class="lazy" src="@authorImg" alt="authorImg">
+                                                <i class="fa fa-check"></i>
+                                            </a>
+                                        </div>
+                                        <div class="nft__item_wrap">
+                                            <a href="@Url.Action("Detail", "Home", new {AuthorId = count + 1, Heart = hearts, DogId = dlist.PK_DogBreedId })">
+                                                <img src="@dlist.ImageUrl" class="lazy nft__item_preview" alt="@dlist.DogName"
+                                                     style="width:100%; height:266px; object-fit:cover; border-radius:10px;">
+                                            </a>
+                                        </div>
+                                        <div class="nft__item_info">
+                                            <a href="03_grey-item-details.html">
+                                                <h4>@dlist.DogName</h4>
+                                            </a>
+                                            <div class="nft__item_price">
+                                                <i class="fa fa-map-marker" style="margin-right: 5px; color: #e83b6e;"></i>@dlist.Origin
+                                                <span>
+                                                    <i class="fa fa-birthday-cake" style="margin-right: 4px; color: #e83b6e;"></i>
+                                                    @dlist.LifeSpan
+                                                </span>
+                                            </div>
+                                            <div class="nft__item_like">
+                                                <i class="fa fa-heart"></i><span>@hearts</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- nft item begin -->
-                        <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                            <div class="nft__item style-2">
-                                <div class="de_countdown id-color" data-year="2021" data-month="9" data-day="14" data-hour="8"></div>
-                                <div class="author_list_pp">
-                                    <a href="03_grey-author.html">
-                                        <img class="lazy" src="~/Content/Home/images/author/author-11.jpg" alt="">
-                                        <i class="fa fa-check"></i>
-                                    </a>
-                                </div>
-                                <div class="nft__item_wrap">
-                                    <a href="03_grey-item-details.html">
-                                        <img src="~/Content/Home/images/items-alt/static-3.jpg" class="lazy nft__item_preview" alt="">
-                                    </a>
-                                </div>
-                                <div class="nft__item_info">
-                                    <a href="03_grey-item-details.html">
-                                        <h4>Finally Free</h4>
-                                    </a>
-                                    <div class="nft__item_price">
-                                        0.05 ETH<span>1/11</span>
-                                    </div>
-                                    <div class="nft__item_action">
-                                        <a href="#">Place a bid</a>
-                                    </div>
-                                    <div class="nft__item_like">
-                                        <i class="fa fa-heart"></i><span>97</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- nft item begin -->
-                        <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                            <div class="nft__item style-2">
-                                <div class="author_list_pp">
-                                    <a href="03_grey-author.html">
-                                        <img class="lazy" src="~/Content/Home/images/author/author-12.jpg" alt="">
-                                        <i class="fa fa-check"></i>
-                                    </a>
-                                </div>
-                                <div class="nft__item_wrap">
-                                    <a href="03_grey-item-details.html">
-                                        <img src="~/Content/Home/images/items-alt/static-4.jpg" class="lazy nft__item_preview" alt="">
-                                    </a>
-                                </div>
-                                <div class="nft__item_info">
-                                    <a href="03_grey-item-details.html">
-                                        <h4>Work From Home</h4>
-                                    </a>
-                                    <div class="nft__item_price">
-                                        0.02 ETH<span>1/15</span>
-                                    </div>
-                                    <div class="nft__item_action">
-                                        <a href="#">Place a bid</a>
-                                    </div>
-                                    <div class="nft__item_like">
-                                        <i class="fa fa-heart"></i><span>73</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- nft item begin -->
-                        <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                            <div class="nft__item style-2">
-                                <div class="author_list_pp">
-                                    <a href="03_grey-author.html">
-                                        <img class="lazy" src="~/Content/Home/images/author/author-9.jpg" alt="">
-                                        <i class="fa fa-check"></i>
-                                    </a>
-                                </div>
-                                <div class="nft__item_wrap">
-                                    <a href="03_grey-item-details.html">
-                                        <img src="~/Content/Home/images/items/anim-4.webp" class="lazy nft__item_preview" alt="">
-                                    </a>
-                                </div>
-                                <div class="nft__item_info">
-                                    <a href="03_grey-item-details.html">
-                                        <h4>The Truth</h4>
-                                    </a>
-                                    <div class="nft__item_price">
-                                        0.06 ETH<span>1/20</span>
-                                    </div>
-                                    <div class="nft__item_action">
-                                        <a href="#">Place a bid</a>
-                                    </div>
-                                    <div class="nft__item_like">
-                                        <i class="fa fa-heart"></i><span>26</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- nft item begin -->
-                        <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                            <div class="nft__item style-2">
-                                <div class="de_countdown id-color" data-year="2021" data-month="9" data-day="30" data-hour="8"></div>
-                                <div class="author_list_pp">
-                                    <a href="03_grey-author.html">
-                                        <img class="lazy" src="~/Content/Home/images/author/author-2.jpg" alt="">
-                                        <i class="fa fa-check"></i>
-                                    </a>
-                                </div>
-                                <div class="nft__item_wrap">
-                                    <a href="03_grey-item-details.html">
-                                        <img src="~/Content/Home/images/items-alt/static-5.jpg" class="lazy nft__item_preview" alt="">
-                                    </a>
-                                </div>
-                                <div class="nft__item_info">
-                                    <a href="03_grey-item-details.html">
-                                        <h4>Running Puppets</h4>
-                                    </a>
-                                    <div class="nft__item_price">
-                                        0.03 ETH<span>1/24</span>
-                                    </div>
-                                    <div class="nft__item_action">
-                                        <a href="#">Place a bid</a>
-                                    </div>
-                                    <div class="nft__item_like">
-                                        <i class="fa fa-heart"></i><span>45</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- nft item begin -->
-                        <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                            <div class="nft__item style-2">
-                                <div class="author_list_pp">
-                                    <a href="03_grey-author.html">
-                                        <img class="lazy" src="~/Content/Home/images/author/author-3.jpg" alt="">
-                                        <i class="fa fa-check"></i>
-                                    </a>
-                                </div>
-                                <div class="nft__item_wrap">
-                                    <a href="03_grey-item-details.html">
-                                        <img src="~/Content/Home/images/items-alt/static-6.jpg" class="lazy nft__item_preview" alt="">
-                                    </a>
-                                </div>
-                                <div class="nft__item_info">
-                                    <a href="03_grey-item-details.html">
-                                        <h4>Green Frogman</h4>
-                                    </a>
-                                    <div class="nft__item_price">
-                                        0.09 ETH<span>1/25</span>
-                                    </div>
-                                    <div class="nft__item_action">
-                                        <a href="#">Place a bid</a>
-                                    </div>
-                                    <div class="nft__item_like">
-                                        <i class="fa fa-heart"></i><span>76</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- nft item begin -->
-                        <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                            <div class="nft__item style-2">
-                                <div class="de_countdown id-color" data-year="2021" data-month="9" data-day="29" data-hour="8"></div>
-                                <div class="author_list_pp">
-                                    <a href="03_grey-author.html">
-                                        <img class="lazy" src="~/Content/Home/images/author/author-4.jpg" alt="">
-                                        <i class="fa fa-check"></i>
-                                    </a>
-                                </div>
-                                <div class="nft__item_wrap">
-                                    <a href="03_grey-item-details.html">
-                                        <img src="~/Content/Home/images/items/anim-5.webp" class="lazy nft__item_preview" alt="">
-                                    </a>
-                                </div>
-                                <div class="nft__item_info">
-                                    <a href="03_grey-item-details.html">
-                                        <h4>Loop Donut</h4>
-                                    </a>
-                                    <div class="nft__item_price">
-                                        0.09 ETH<span>1/14</span>
-                                    </div>
-                                    <div class="nft__item_action">
-                                        <a href="#">Place a bid</a>
-                                    </div>
-                                    <div class="nft__item_like">
-                                        <i class="fa fa-heart"></i><span>94</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                <!-- nft item end -->
+
+                                count++;
+                            }
+                        }
+
                     </div>
                 </div>
             </section>
@@ -426,8 +206,8 @@
                         <div class="col-md-12">
                             <div class="de-flex">
                                 <div class="de-flex-col">
-                                    <a href="03_grey-index.html">
-                                        <span class="copy">&copy; Copyright 2021 - Gigaland by Designesia</span>
+                                    <a href="#">
+                                        <span class="copy">&copy;  @DateTime.Now.ToString("Y") - DogHub by Arqum</span>
                                     </a>
                                 </div>
                                 <div class="de-flex-col">

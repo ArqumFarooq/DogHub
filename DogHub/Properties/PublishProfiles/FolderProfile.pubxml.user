@@ -22,10 +22,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/21/2025 02:08:54</publishTime>
     </File>
     <File Include="bin/DogHub.dll">
-      <publishTime>07/22/2025 02:32:50</publishTime>
+      <publishTime>07/23/2025 04:41:31</publishTime>
     </File>
     <File Include="bin/DogHub.pdb">
-      <publishTime>07/22/2025 02:32:50</publishTime>
+      <publishTime>07/23/2025 04:41:31</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>06/16/2024 20:46:24</publishTime>
@@ -10827,6 +10827,12 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Content/Home/js/wow.min.js">
       <publishTime>07/17/2025 01:06:07</publishTime>
     </File>
+    <File Include="Content/Images/doghub-logo.png">
+      <publishTime>07/22/2025 05:57:34</publishTime>
+    </File>
+    <File Include="Content/Images/doghublogo.png">
+      <publishTime>07/22/2025 06:04:44</publishTime>
+    </File>
     <File Include="Content/Site.css">
       <publishTime>07/11/2025 03:00:02</publishTime>
     </File>
@@ -10900,28 +10906,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/18/2025 00:01:52</publishTime>
     </File>
     <File Include="Views/Admin/Dashboard.cshtml">
-      <publishTime>07/20/2025 13:59:45</publishTime>
+      <publishTime>07/22/2025 23:24:49</publishTime>
     </File>
     <File Include="Views/Admin/ViewAuditLog.cshtml">
       <publishTime>07/21/2025 23:45:59</publishTime>
     </File>
     <File Include="Views/Admin/ViewDogBreed.cshtml">
-      <publishTime>07/22/2025 00:54:59</publishTime>
+      <publishTime>07/22/2025 05:18:32</publishTime>
     </File>
     <File Include="Views/Admin/ViewUser.cshtml">
       <publishTime>07/21/2025 22:20:05</publishTime>
     </File>
     <File Include="Views/Auth/ForgotPassword.cshtml">
-      <publishTime>07/21/2025 00:02:59</publishTime>
+      <publishTime>07/22/2025 06:08:15</publishTime>
     </File>
     <File Include="Views/Auth/Login.cshtml">
-      <publishTime>07/21/2025 20:47:01</publishTime>
+      <publishTime>07/22/2025 06:07:33</publishTime>
     </File>
     <File Include="Views/Auth/Register.cshtml">
-      <publishTime>07/21/2025 17:12:31</publishTime>
+      <publishTime>07/22/2025 06:08:53</publishTime>
     </File>
     <File Include="Views/Auth/ResetPassword.cshtml">
-      <publishTime>07/21/2025 00:05:30</publishTime>
+      <publishTime>07/22/2025 06:09:01</publishTime>
     </File>
     <File Include="Views/Auth/UpdateProfile.cshtml">
       <publishTime>07/21/2025 02:21:53</publishTime>
@@ -10935,8 +10941,17 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Home/Contact.cshtml">
       <publishTime>07/11/2025 03:00:02</publishTime>
     </File>
+    <File Include="Views/Home/Detail.cshtml">
+      <publishTime>07/23/2025 04:26:22</publishTime>
+    </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>07/11/2025 03:00:02</publishTime>
+      <publishTime>07/23/2025 04:27:35</publishTime>
+    </File>
+    <File Include="Views/Home/SearchDog.cshtml">
+      <publishTime>07/23/2025 02:46:11</publishTime>
+    </File>
+    <File Include="Views/Home/_DogBreedCardPartial.cshtml">
+      <publishTime>07/23/2025 03:04:18</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>07/11/2025 03:00:02</publishTime>
@@ -10945,7 +10960,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/13/2025 02:24:27</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>07/21/2025 17:22:34</publishTime>
+      <publishTime>07/22/2025 23:25:44</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>07/11/2025 03:00:02</publishTime>
@@ -10954,7 +10969,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/11/2025 03:00:02</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>07/22/2025 02:32:52</publishTime>
+      <publishTime>07/22/2025 21:22:19</publishTime>
     </File>
   </ItemGroup>
 </Project>

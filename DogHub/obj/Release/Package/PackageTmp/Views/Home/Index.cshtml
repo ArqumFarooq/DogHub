@@ -1,31 +1,253 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@using DogHub.BL
+@using DogHub.Models
+@{
+    ViewBag.Title = "DogHub - Home Page";
+    Layout = null;
 }
+@{
+    DogHubEntities de = new DogHubEntities();
+    var dogBreedasc = new DogBreedBL().GetAllDogBreeds(de).Where(x => (x.IsDeleted == false || x.IsDeleted == null) && (x.ImageUrl != null && x.DogName != null && x.Origin != null && x.LifeSpan != null)).OrderBy(x => x.PK_DogBreedId).ToList();
+    var dogBreeddesc = new DogBreedBL().GetAllDogBreeds(de).Where(x => (x.IsDeleted == false || x.IsDeleted == null) && (x.ImageUrl != null && x.DogName != null && x.Origin != null && x.LifeSpan != null)).OrderByDescending(x => x.PK_DogBreedId).ToList();
+}
+<!DOCTYPE html>
+<html>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<head>
+    <title>DogHub - Home</title>
+    <link rel="icon" href="~/Content/assets/images/Favicons/D-Fav.jpg" type="image/gif" sizes="16x16">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="keywords" />
+    <meta content="" name="author" />
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <!-- CSS Files
+    ================================================== -->
+    <link id="bootstrap" href="~/Content/Home/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link id="bootstrap-grid" href="~/Content/Home/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css" />
+    <link id="bootstrap-reboot" href="~/Content/Home/css/bootstrap-reboot.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Home/css/animate.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Home/css/owl.carousel.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Home/css/owl.theme.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Home/css/owl.transitions.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Home/css/magnific-popup.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Home/css/jquery.countdown.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Home/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Home/css/de-grey.css" rel="stylesheet" type="text/css" />
+    <!-- color scheme -->
+
+    <style>
+        .doghub-logo {
+            width: 35px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #212428;
+            font-size: 40px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            color: red;
+            border: 1px solid #212428;
+            image-rendering: pixelated;
+        }
+    </style>
+
+    <link id="colors" href="~/Content/Home/css/colors/scheme-04.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Home/css/coloring.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="dark-scheme de-grey">
+    <div id="wrapper">
+
+        <!-- header begin -->
+        <header class="transparent scroll-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="de-flex sm-pt10">
+                            <div class="de-flex-col">
+                                <div class="de-flex-col">
+                                    <!-- logo begin -->
+                                    <div id="logo">
+                                        <div class="doghub-logo">DogHub</div>
+                                    </div>
+                                    <!-- logo close -->
+                                </div>
+                            </div>
+                            <div class="de-flex-col header-col-mid">
+                                <!-- mainmenu begin -->
+                                <ul id="mainmenu">
+                                    <li>
+                                        <a href="@Url.Action("Index", "Home")">Home<span></span></a>
+                                    </li>
+                                    @*<li>
+                                            <a href="@Url.Action("SearchDog", "Home")">Explore<span></span></a>
+                                        </li>*@
+                                    <li>
+                                        <a href="@Url.Action("Detail", "Home")">Detail<span></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("DashBoard", "Admin")">DashBoard<span></span></a>
+                                    </li>
+                                </ul>
+                                <!-- mainmenu close -->
+                                <div class="menu_side_area">
+                                    <a href="@Url.Action("Logout", "Auth")" class="btn-main"><i class="icon_wallet_alt"></i><span>Logout</span></a>
+                                    <span id="menu-btn"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- header close -->
+        <!-- content begin -->
+        <div class="no-bottom no-top" id="content">
+            <div id="top"></div>
+
+            <section id="section-hero" class="no-bottom" aria-label="section">
+                <div class="d-carousel">
+                    <div id="item-carousel-big" class="owl-carousel wow fadeIn">
+                        @{
+                            int counter = 0;
+                            foreach (var dlist in dogBreedasc)
+                            {
+                                if (counter >= 5) { break; }
+                                <div class="nft_pic">
+                                    <a href="@Url.Action("Detail", "Home", new {AuthorId = counter + 1, Heart = 20, DogId = dlist.PK_DogBreedId })">
+                                        <span class="nft_pic_info">
+                                            <span class="nft_pic_title">@dlist.DogName</span>
+                                            <span class="nft_pic_by">@dlist.Origin | @dlist.LifeSpan</span>
+                                        </span>
+                                    </a>
+                                    <div class="nft_pic_wrap">
+                                        <img src="@dlist.ImageUrl" class="lazy img-fluid" alt="@dlist.DogName" style="width:512px; height:393px; object-fit:cover;">
+                                    </div>
+                                </div>
+                                counter++;
+                            }
+                        }
+                    </div>
+                    <div class="d-arrow-left"><i class="fa fa-angle-left"></i></div>
+                    <div class="d-arrow-right"><i class="fa fa-angle-right"></i></div>
+                </div>
+            </section>
+
+            <section id="section-collections" class="pt30 pb30">
+                <div class="container">
+                    <div class="spacer-single"></div>
+                    <div class="row wow fadeIn">
+                        <div class="col-lg-12">
+                            <h2 class="style-2">Top Dog Breeds</h2>
+                        </div>
+                        @{
+                            int count = 0;
+                            Random rand = new Random(); // Random generator
+
+                            foreach (var dlist in dogBreeddesc)
+                            {
+                                if (count >= 8) { break; }
+                                int hearts = rand.Next(1, 100); // Generate random hearts from 1 to 99
+                                string authorImg = $"/Content/Home/images/author/author-{count + 1}.jpg";
+
+                                <!-- nft item begin -->
+                                <div class="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="nft__item style-2">
+                                        <div class="author_list_pp">
+                                            <a href="#">
+                                                <img class="lazy" src="@authorImg" alt="authorImg">
+                                                <i class="fa fa-check"></i>
+                                            </a>
+                                        </div>
+                                        <div class="nft__item_wrap">
+                                            <a href="@Url.Action("Detail", "Home", new {AuthorId = count + 1, Heart = hearts, DogId = dlist.PK_DogBreedId })">
+                                                <img src="@dlist.ImageUrl" class="lazy nft__item_preview" alt="@dlist.DogName"
+                                                     style="width:100%; height:266px; object-fit:cover; border-radius:10px;">
+                                            </a>
+                                        </div>
+                                        <div class="nft__item_info">
+                                            <a href="03_grey-item-details.html">
+                                                <h4>@dlist.DogName</h4>
+                                            </a>
+                                            <div class="nft__item_price">
+                                                <i class="fa fa-map-marker" style="margin-right: 5px; color: #e83b6e;"></i>@dlist.Origin
+                                                <span>
+                                                    <i class="fa fa-birthday-cake" style="margin-right: 4px; color: #e83b6e;"></i>
+                                                    @dlist.LifeSpan
+                                                </span>
+                                            </div>
+                                            <div class="nft__item_like">
+                                                <i class="fa fa-heart"></i><span>@hearts</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- nft item end -->
+
+                                count++;
+                            }
+                        }
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        <!-- content close -->
+
+        <a href="#" id="back-to-top"></a>
+
+        <!-- footer begin -->
+        <footer>
+            <div class="subfooter">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="de-flex">
+                                <div class="de-flex-col">
+                                    <a href="#">
+                                        <span class="copy">&copy;  @DateTime.Now.ToString("Y") - DogHub by Arqum</span>
+                                    </a>
+                                </div>
+                                <div class="de-flex-col">
+                                    <div class="social-icons">
+                                        <a href="#"><i class="fa fa-facebook fa-lg"></i></a>
+                                        <a href="#"><i class="fa fa-twitter fa-lg"></i></a>
+                                        <a href="#"><i class="fa fa-linkedin fa-lg"></i></a>
+                                        <a href="#"><i class="fa fa-pinterest fa-lg"></i></a>
+                                        <a href="#"><i class="fa fa-rss fa-lg"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- footer close -->
+
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+    <!-- Javascript Files
+    ================================================== -->
+    <script src="~/Content/Home/js/jquery.min.js"></script>
+    <script src="~/Content/Home/js/bootstrap.min.js"></script>
+    <script src="~/Content/Home/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/Home/js/wow.min.js"></script>
+    <script src="~/Content/Home/js/jquery.isotope.min.js"></script>
+    <script src="~/Content/Home/js/easing.js"></script>
+    <script src="~/Content/Home/js/owl.carousel.js"></script>
+    <script src="~/Content/Home/js/validation.js"></script>
+    <script src="~/Content/Home/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/Content/Home/js/enquire.min.js"></script>
+    <script src="~/Content/Home/js/jquery.plugin.js"></script>
+    <script src="~/Content/Home/js/jquery.countTo.js"></script>
+    <script src="~/Content/Home/js/jquery.countdown.js"></script>
+    <script src="~/Content/Home/js/jquery.lazy.min.js"></script>
+    <script src="~/Content/Home/js/jquery.lazy.plugins.min.js"></script>
+    <script src="~/Content/Home/js/designesia.js"></script>
+
+</body>
+
+</html>

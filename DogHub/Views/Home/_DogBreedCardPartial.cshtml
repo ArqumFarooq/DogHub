@@ -1,0 +1,31 @@
+﻿@model List<DogHub.HelpingClasses.DogBreedDTO>
+
+@foreach (var dog in Model)
+{
+    <div class="nft__item">
+        <div class="nft_pic">
+            <a href="#">
+                <span class="nft_pic_info">
+                    <span class="nft_pic_title">@dog.DogName</span>
+                    <span class="nft_pic_by">
+                        <i class="fa fa-map-marker-alt me-1"></i> @dog.Origin
+                        &nbsp;&nbsp;
+                        <i class="fa fa-hourglass-half me-1"></i> @dog.LifeSpan
+                    </span>
+                </span>
+            </a>
+            <div class="nft_pic_wrap">
+                <img src="@dog.ImageUrl" class="lazy img-fluid dog-img" alt="@dog.DogName" />
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .dog-img {
+        width: 512px;
+        height: 393px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+</style>

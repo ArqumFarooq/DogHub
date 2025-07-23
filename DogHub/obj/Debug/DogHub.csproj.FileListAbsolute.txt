@@ -228,7 +228,6 @@ D:\DogHub\DogHubManagementSystem\DogHub\bin\System.Web.WebPages.Deployment.xml
 D:\DogHub\DogHubManagementSystem\DogHub\bin\System.Web.WebPages.Razor.xml
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Antlr3.Runtime.pdb
 D:\DogHub\DogHubManagementSystem\DogHub\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\DogHub\DogHubManagementSystem\DogHub\obj\Debug\DogHub.csprojAssemblyReference.cache
 D:\DogHub\DogHubManagementSystem\DogHub\obj\Debug\DogHub.csproj.CoreCompileInputs.cache
 D:\DogHub\DogHubManagementSystem\DogHub\obj\Debug\DogHub.csproj.CopyComplete
 D:\DogHub\DogHubManagementSystem\DogHub\obj\Debug\DogHub.dll

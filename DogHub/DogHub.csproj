@@ -3726,8 +3726,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Auth\Register.cshtml" />
@@ -3744,6 +3742,7 @@
     <Content Include="Views\Admin\ViewAuditLog.cshtml" />
     <Content Include="Views\Home\Detail.cshtml" />
     <Content Include="Views\Home\SearchDog.cshtml" />
+    <Content Include="Views\Home\_DogBreedCardPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

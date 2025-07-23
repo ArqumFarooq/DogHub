@@ -467,8 +467,8 @@ namespace DogHub.Controllers
 
             ViewBag.Message = msg;
             ViewBag.Color = color;
-            ViewBag.ParentBreeds = new DogBreedBL().GetAllDogBreeds(de); // Or filtered list
-            ViewBag.Countries = new List<string> { "Pakistan", "USA", "UK", "Germany", "Japan" }; // or fetch from DB
+            ViewBag.ParentBreeds = new DogBreedBL().GetAllDogBreeds(de); 
+            ViewBag.Countries = ViewBag.Countries = gp.GetAllCountries();
 
             return View();
         }
@@ -716,8 +716,10 @@ namespace DogHub.Controllers
 
             //    return Json(new { description = aiDescription });
             #endregion
-            ParentBreed = (ParentBreed == "-- Select Parent Breed (optional)--") ? null : ParentBreed;
-            string description = $"The '{DogName}' is a remarkable breed that traces its roots back to '{Origin}'. ";
+            ParentBreed = string.IsNullOrWhiteSpace(ParentBreed) ||
+                          ParentBreed.Trim().StartsWith("-- Select", StringComparison.OrdinalIgnoreCase)
+                          ? null
+                          : ParentBreed; string description = $"The '{DogName}' is a remarkable breed that traces its roots back to '{Origin}'. ";
 
             if (!string.IsNullOrWhiteSpace(ParentBreed) && ParentBreed != "-- Select Parent Breed (optional)--")
             {

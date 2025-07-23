@@ -17,6 +17,8 @@ namespace DogHub.HelpingClasses
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public int SubBreedCount { get; set; }
+        public int Hearts { get; set; }
+        public string AuthorImage { get; set; }
         public string SysCreatedDate { get; set; }
         public string SysModifiedDate { get; set; }
         public bool? IsDeleted { get; set; }
